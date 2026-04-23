@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ПДД КЗ — Сортировка знаков</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800;900&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky:    #00AEEF;
+  --sky-dk: #0090c8;
+  --sky-lt: #e0f6ff;
+  --gold:   #F0C040;
+  --gold-dk:#c89a10;
+  --gold-lt:#fdf6dc;
+  --ink:    #0a1628;
+  --ink2:   #1a2d4a;
+  --off:    #f5f8fc;
+  --border: #d4e0ee;
+  --text:   #0f1e35;
+  --muted:  #5e7a99;
+  --green:  #12a150;
+  --green-lt:#e8f8ef;
+  --red:    #e53935;
+  --red-lt: #ffeaea;
+  --orange: #f57c00;
+  --orange-lt:#fff3e0;
+  --radius: 14px;
+  --shadow: 0 4px 20px rgba(0,100,170,0.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Mulish',sans-serif;background:var(--off);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+
+header{width:100%;background:var(--ink);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:62px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,0.30);}
+.logo{font-family:'Unbounded',sans-serif;font-size:.85rem;font-weight:700;color:#fff;}
+.logo span{color:var(--gold);}
+.hdr-right{display:flex;align-items:center;gap:10px;}
+.lang-btn{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;padding:5px 14px;background:transparent;border:1.5px solid rgba(255,255,255,0.22);border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;color:#fff;}
+.lang-btn:hover{background:rgba(255,255,255,0.1);}
+.lang-ru{color:#fff;} .lang-kz{color:var(--gold);}
+
+main{width:100%;max-width:960px;padding:1.5rem 1rem 4rem;flex:1;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+#screen-home{animation:fadeUp .35s ease;}
+#screen-quiz,#screen-result{display:none;}
+
+.home-hero{background:var(--ink);border-radius:var(--radius);padding:2.5rem 2.5rem;color:#fff;position:relative;overflow:hidden;margin-bottom:1.75rem;}
+.home-hero::before{content:'';position:absolute;top:0;right:0;width:280px;height:280px;background:radial-gradient(circle at 75% 25%,rgba(0,174,239,0.15) 0%,transparent 65%);pointer-events:none;}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(240,192,64,0.12);border:1px solid rgba(240,192,64,0.3);color:var(--gold);font-family:'Unbounded',sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:1rem;}
+.hero-title{font-family:'Unbounded',sans-serif;font-size:clamp(1.4rem,4vw,2.2rem);font-weight:900;line-height:1.1;margin-bottom:.75rem;letter-spacing:-.02em;}
+.hero-title em{color:var(--sky);font-style:normal;}
+.hero-sub{color:rgba(255,255,255,0.55);font-size:14px;line-height:1.7;max-width:480px;margin-bottom:1.5rem;}
+
+.cats-preview{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:2rem;}
+.cat-pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:100px;font-size:13px;font-weight:700;border:1.5px solid;}
+.cat-pill.warn{background:rgba(245,124,0,0.12);border-color:rgba(245,124,0,0.4);color:#f57c00;}
+.cat-pill.forb{background:rgba(229,57,53,0.12);border-color:rgba(229,57,53,0.4);color:#e53935;}
+.cat-pill.prio{background:rgba(0,174,239,0.12);border-color:rgba(0,174,239,0.4);color:var(--sky);}
+
+.hero-desc{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:1rem 1.25rem;font-size:13px;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:2rem;}
+.hero-desc strong{color:var(--gold);}
+
+.btn-primary{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;letter-spacing:.02em;padding:1rem 2rem;background:var(--gold);color:var(--ink);border:none;border-radius:var(--radius);cursor:pointer;transition:background .18s,transform .15s,box-shadow .18s;box-shadow:0 4px 16px rgba(240,192,64,0.35);}
+.btn-primary:hover{background:#f5cc55;transform:translateY(-2px);}
+.btn-outline{font-family:'Mulish',sans-serif;font-size:14px;font-weight:700;padding:.85rem 2rem;background:#fff;color:var(--ink2);border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:border-color .18s,box-shadow .18s;width:100%;}
+.btn-outline:hover{border-color:var(--sky);}
+
+.quiz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:8px;}
+.round-badge{font-family:'Unbounded',sans-serif;font-size:12px;font-weight:600;color:var(--sky-dk);background:var(--sky-lt);padding:5px 14px;border-radius:100px;border:1px solid rgba(0,174,239,0.2);}
+.score-badge{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:700;color:var(--gold-dk);}
+.prog-track{width:100%;height:5px;background:var(--border);border-radius:6px;margin-bottom:1.5rem;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--sky),var(--gold));border-radius:6px;transition:width .4s ease;}
+
+.current-sign-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:1.5rem;}
+.current-sign-card{background:#fff;border:2px solid var(--border);border-radius:var(--radius);padding:1.5rem 2rem;text-align:center;box-shadow:var(--shadow);display:inline-flex;flex-direction:column;align-items:center;gap:.75rem;min-width:220px;}
+.current-sign-card img,.current-sign-card .sign-placeholder{width:100px;height:100px;object-fit:contain;}
+.sign-placeholder{display:flex;align-items:center;justify-content:center;background:var(--sky-lt);border-radius:8px;font-size:2rem;}
+.current-sign-name{font-size:15px;font-weight:700;color:var(--text);max-width:260px;line-height:1.4;text-align:center;}
+
+.question-label{font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:1.25rem;}
+
+.zones{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem;}
+@media(max-width:600px){.zones{grid-template-columns:1fr;}}
+.zone{border:2.5px dashed var(--border);border-radius:var(--radius);padding:1.25rem 1rem;text-align:center;cursor:pointer;transition:all .2s;background:#fff;user-select:none;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;}
+.zone:hover,.zone.drag-over{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,100,170,0.15);}
+.zone.warn:hover,.zone.warn.drag-over{border-color:var(--orange);background:var(--orange-lt);}
+.zone.forb:hover,.zone.forb.drag-over{border-color:var(--red);background:var(--red-lt);}
+.zone.prio:hover,.zone.prio.drag-over{border-color:var(--sky);background:var(--sky-lt);}
+.zone.correct{border-style:solid;border-color:var(--green);background:var(--green-lt);animation:popIn .3s ease;}
+.zone.wrong{border-style:solid;border-color:var(--red);background:var(--red-lt);animation:shake .4s;}
+.zone-icon{font-size:1.75rem;}
+.zone-title{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.zone.warn .zone-title{color:var(--orange);}
+.zone.forb .zone-title{color:var(--red);}
+.zone.prio .zone-title{color:var(--sky-dk);}
+.zone-hint{font-size:11px;color:var(--muted);font-weight:600;line-height:1.4;}
+
+@keyframes popIn{0%{transform:scale(0.95)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+.feedback{max-width:600px;margin:0 auto 1rem;padding:.95rem 1.2rem;border-radius:var(--radius);font-size:14px;line-height:1.65;font-weight:600;display:none;border-left:4px solid transparent;}
+.feedback.show{display:block;animation:fadeUp .2s;}
+.feedback.ok{background:var(--green-lt);border-color:var(--green);color:#0a6630;}
+.feedback.err{background:var(--red-lt);border-color:var(--red);color:#8b0000;}
+.btn-next-wrap{text-align:center;}
+.btn-next{display:none;font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;letter-spacing:.02em;padding:.85rem 2.25rem;background:var(--ink);color:#fff;border:none;border-radius:var(--radius);cursor:pointer;transition:background .18s,transform .15s;box-shadow:0 4px 16px rgba(10,22,40,0.25);}
+.btn-next.show{display:inline-block;animation:fadeUp .2s;}
+.btn-next:hover{background:var(--ink2);transform:translateY(-1px);}
+
+.res-hero{background:var(--ink);border-radius:var(--radius);padding:2.75rem 2rem;color:#fff;text-align:center;margin-bottom:1.5rem;position:relative;overflow:hidden;}
+.res-hero::before{content:'';position:absolute;top:-20px;right:-10px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(240,192,64,0.08) 0%,transparent 70%);pointer-events:none;}
+.res-verdict{font-family:'Unbounded',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:.4rem;letter-spacing:-.02em;}
+.res-hint{color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:1.75rem;}
+.res-pts{font-family:'Unbounded',sans-serif;font-size:3.5rem;font-weight:900;line-height:1;color:var(--gold);}
+.res-pts-lbl{font-size:11px;color:rgba(255,255,255,0.38);margin-top:6px;letter-spacing:.1em;text-transform:uppercase;}
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.875rem;margin-bottom:1.5rem;}
+.res-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;text-align:center;box-shadow:var(--shadow);}
+.res-val{font-family:'Unbounded',sans-serif;font-size:1.75rem;font-weight:800;line-height:1;margin-bottom:5px;}
+.res-val.g{color:var(--green);} .res-val.r{color:var(--red);} .res-val.b{color:var(--sky-dk);}
+.res-key{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+.res-btns{display:flex;flex-direction:column;gap:.75rem;}
+
+.answers-log{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.5rem;box-shadow:var(--shadow);}
+.answers-log-title{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.log-item{display:flex;align-items:center;gap:10px;padding:.6rem .25rem;border-bottom:1px solid var(--border);font-size:13px;}
+.log-item:last-child{border-bottom:none;}
+.log-icon{font-size:1rem;min-width:20px;text-align:center;}
+.log-name{flex:1;font-weight:600;color:var(--text);font-size:12px;}
+.log-cat{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;}
+.log-cat.warn{background:var(--orange-lt);color:var(--orange);}
+.log-cat.forb{background:var(--red-lt);color:var(--red);}
+.log-cat.prio{background:var(--sky-lt);color:var(--sky-dk);}
+
+footer{width:100%;background:var(--ink);text-align:center;padding:1rem;font-size:12px;color:rgba(255,255,255,0.28);font-weight:600;}
+footer code{color:rgba(255,255,255,0.5);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">ПДД <span>КЗ</span></div>
+  <div class="hdr-right">
+    <button class="lang-btn" onclick="toggleLang()">
+      <span class="lang-ru">РУС</span>
+      <span style="color:rgba(255,255,255,0.3)">|</span>
+      <span class="lang-kz">ҚАЗ</span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <div id="screen-home">
+    <div class="home-hero">
+      <div class="hero-tag">🗂️ Сортировка знаков</div>
+      <div class="hero-title">Раскидай знаки<br><em>по категориям</em></div>
+      <p class="hero-sub" id="home-sub">Определи к какой группе относится каждый знак ПДД Казахстана</p>
+      <div class="cats-preview">
+        <div class="cat-pill warn">⚠️ <span id="lbl-warn">Предупреждающие</span></div>
+        <div class="cat-pill forb">🚫 <span id="lbl-forb">Запрещающие</span></div>
+        <div class="cat-pill prio">🔵 <span id="lbl-prio">Приоритет</span></div>
+      </div>
+      <div class="hero-desc" id="home-desc">
+        Тебе будет показан знак с названием. Нажми на нужную категорию — <strong>15 знаков</strong>, смешанных из всех групп.
+      </div>
+      <button class="btn-primary" onclick="startQuiz()" id="btn-start">Начать →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz">
+    <div class="quiz-top">
+      <div class="round-badge" id="round-label">Знак 1 из 15</div>
+      <div class="score-badge">⭐ <span id="score-display">0</span></div>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+
+    <div class="current-sign-wrap">
+      <div class="current-sign-card" id="sign-card">
+        <img id="sign-img" src="" alt="">
+        <div class="sign-placeholder" id="sign-ph" style="display:none">❓</div>
+        <div class="current-sign-name" id="sign-name">—</div>
+      </div>
+    </div>
+
+    <div class="question-label" id="q-label">К какой категории относится этот знак?</div>
+
+    <div class="zones">
+      <div class="zone warn" id="zone-warn" onclick="answer('warn')"
+           ondragover="onDragOver(event,'warn')" ondragleave="onDragLeave('warn')" ondrop="onDrop(event,'warn')">
+        <div class="zone-icon">⚠️</div>
+        <div class="zone-title" id="zone-warn-title">Предупреждающие</div>
+        <div class="zone-hint" id="zone-warn-hint">опасность впереди</div>
+      </div>
+      <div class="zone forb" id="zone-forb" onclick="answer('forb')"
+           ondragover="onDragOver(event,'forb')" ondragleave="onDragLeave('forb')" ondrop="onDrop(event,'forb')">
+        <div class="zone-icon">🚫</div>
+        <div class="zone-title" id="zone-forb-title">Запрещающие</div>
+        <div class="zone-hint" id="zone-forb-hint">запрет действий</div>
+      </div>
+      <div class="zone prio" id="zone-prio" onclick="answer('prio')"
+           ondragover="onDragOver(event,'prio')" ondragleave="onDragLeave('prio')" ondrop="onDrop(event,'prio')">
+        <div class="zone-icon">🔵</div>
+        <div class="zone-title" id="zone-prio-title">Приоритет</div>
+        <div class="zone-hint" id="zone-prio-hint">право проезда</div>
+      </div>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+    <div class="btn-next-wrap">
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">Следующий →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="screen-result">
+    <div class="res-hero">
+      <div class="res-verdict" id="res-verdict"></div>
+      <div class="res-hint" id="res-hint"></div>
+      <div class="res-pts" id="res-pts"></div>
+      <div class="res-pts-lbl" id="res-pts-lbl">ПРАВИЛЬНЫХ ОТВЕТОВ</div>
+    </div>
+    <div class="res-grid">
+      <div class="res-card"><div class="res-val g" id="r-correct">0</div><div class="res-key" id="r-correct-lbl">Верно</div></div>
+      <div class="res-card"><div class="res-val r" id="r-wrong">0</div><div class="res-key" id="r-wrong-lbl">Неверно</div></div>
+      <div class="res-card"><div class="res-val b" id="r-pct">0%</div><div class="res-key" id="r-pct-lbl">Точность</div></div>
+    </div>
+    <div class="answers-log">
+      <div class="answers-log-title" id="log-title">Разбор ответов</div>
+      <div id="log-items"></div>
+    </div>
+    <div class="res-btns">
+      <button class="btn-primary" onclick="startQuiz()" id="btn-retry">Ещё раз →</button>
+      <button class="btn-outline" onclick="goHome()" id="btn-home-res">На главную</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>ПДД КЗ · <code>Сортировка знаков</code> · 2025</footer>
+
+<script>
+const SIGNS = {
+  '1.1':   { img:'signs/1.1.png',   cat:'warn', name:{ru:'Железнодорожный переезд со шлагбаумом', kz:'Шлагбаумы бар теміржол өткелі'} },
+  '1.2':   { img:'signs/1.2.png',   cat:'warn', name:{ru:'Железнодорожный переезд без шлагбаума', kz:'Шлагбаумсыз теміржол өткелі'} },
+  '1.3.1': { img:'signs/1.3.1.png', cat:'warn', name:{ru:'Однопутная железная дорога',            kz:'Бір жолды теміржол'} },
+  '1.6':   { img:'signs/1.6.png',   cat:'warn', name:{ru:'Пересечение равнозначных дорог',        kz:'Тең мәнді жолдардың қиылысы'} },
+  '1.7':   { img:'signs/1.7.png',   cat:'warn', name:{ru:'Пересечение с круговым движением',      kz:'Айналма қозғалыспен қиылысу'} },
+  '1.8':   { img:'signs/1.8.png',   cat:'warn', name:{ru:'Светофорное регулирование',             kz:'Светофорлық реттеу'} },
+  '1.11.1':{ img:'signs/1.11.1.png',cat:'warn', name:{ru:'Опасный поворот направо',               kz:'Оңға қауіпті бұрылыс'} },
+  '1.12.1':{ img:'signs/1.12.1.png',cat:'warn', name:{ru:'Опасные повороты',                      kz:'Қауіпті бұрылыстар'} },
+  '1.13':  { img:'signs/1.13.png',  cat:'warn', name:{ru:'Крутой спуск',                          kz:'Тік түсу'} },
+  '1.14':  { img:'signs/1.14.png',  cat:'warn', name:{ru:'Крутой подъём',                         kz:'Тік көтерілу'} },
+  '1.15':  { img:'signs/1.15.png',  cat:'warn', name:{ru:'Скользкая дорога',                      kz:'Тайғақ жол'} },
+  '1.16':  { img:'signs/1.16.png',  cat:'warn', name:{ru:'Неровная дорога',                       kz:'Тегіс емес жол'} },
+  '1.16.1':{ img:'signs/1.16.1.png',cat:'warn', name:{ru:'Искусственная неровность',              kz:'Жасанды кедергі'} },
+  '1.17':  { img:'signs/1.17.png',  cat:'warn', name:{ru:'Выброс гравия',                         kz:'Қиыршық тас шашырауы'} },
+  '1.18':  { img:'signs/1.18.png',  cat:'warn', name:{ru:'Опасная обочина',                       kz:'Қауіпті жол жиегі'} },
+  '1.18.1':{ img:'signs/1.18.1.png',cat:'warn', name:{ru:'Съезд с дороги',                        kz:'Жолдан түсу'} },
+  '1.19':  { img:'signs/1.19.png',  cat:'warn', name:{ru:'Двустороннее движение',                 kz:'Екіжақты қозғалыс'} },
+  '1.20':  { img:'signs/1.20.png',  cat:'warn', name:{ru:'Пешеходный переход',                    kz:'Жаяу жүргіншілер өткелі'} },
+  '1.22':  { img:'signs/1.22.png',  cat:'warn', name:{ru:'Пересечение с велосипедной дорожкой',   kz:'Велосипед жолымен қиылысу'} },
+  '1.23':  { img:'signs/1.23.png',  cat:'warn', name:{ru:'Дорожные работы',                       kz:'Жол жұмыстары'} },
+  '1.24':  { img:'signs/1.24.png',  cat:'warn', name:{ru:'Перегон скота',                         kz:'Мал айдау'} },
+  '1.25':  { img:'signs/1.25.png',  cat:'warn', name:{ru:'Дикие животные',                        kz:'Жабайы жануарлар'} },
+  '1.26':  { img:'signs/1.26.png',  cat:'warn', name:{ru:'Падение камней',                        kz:'Тас құлауы'} },
+  '1.27':  { img:'signs/1.27.png',  cat:'warn', name:{ru:'Боковой ветер',                         kz:'Бүйір жел'} },
+  '1.28':  { img:'signs/1.28.png',  cat:'warn', name:{ru:'Низколетящие самолёты',                 kz:'Төмен ұшатын ұшақтар'} },
+  '1.29':  { img:'signs/1.29.png',  cat:'warn', name:{ru:'Тоннель',                               kz:'Туннель'} },
+  '1.30':  { img:'signs/1.30.png',  cat:'warn', name:{ru:'Прочие опасности',                      kz:'Өзге қауіптер'} },
+  '2.1':   { img:'signs/2.1.svg',   cat:'prio', name:{ru:'Главная дорога',                        kz:'Бас жол'} },
+  '2.4':   { img:'signs/2.4.svg',   cat:'prio', name:{ru:'Уступите дорогу',                       kz:'Жол беріңіз'} },
+  '3.1':   { img:'signs/3.1.svg',   cat:'forb', name:{ru:'Въезд запрещён',                        kz:'Кіру тыйым салынған'} },
+  '3.3':   { img:'signs/3.3.svg',   cat:'forb', name:{ru:'Движение запрещено',                    kz:'Қозғалыс тыйым салынған'} },
+  '3.4':   { img:'signs/3.4.svg',   cat:'forb', name:{ru:'Движение грузовых автомобилей запрещено',kz:'Жүк автомобильдерінің қозғалысы тыйым салынған'} },
+  '3.5':   { img:'signs/3.5.svg',   cat:'forb', name:{ru:'Движение мотоциклов запрещено',         kz:'Мотоциклдердің қозғалысы тыйым салынған'} },
+  '3.6':   { img:'signs/3.6.svg',   cat:'forb', name:{ru:'Движение тракторов запрещено',          kz:'Тракторлардың қозғалысы тыйым салынған'} },
+  '3.7':   { img:'signs/3.7.svg',   cat:'forb', name:{ru:'Движение с прицепом запрещено',         kz:'Тіркемемен қозғалыс тыйым салынған'} },
+  '3.9':   { img:'signs/3.9.svg',   cat:'forb', name:{ru:'Движение на велосипедах запрещено',     kz:'Велосипедпен жүру тыйым салынған'} },
+  '3.10':  { img:'signs/3.10.svg',  cat:'forb', name:{ru:'Движение пешеходов запрещено',          kz:'Жаяу жүргіншілердің қозғалысы тыйым салынған'} },
+  '3.11':  { img:'signs/3.11.svg',  cat:'forb', name:{ru:'Ограничение массы',                     kz:'Салмақты шектеу'} },
+  '3.12':  { img:'signs/3.12.svg',  cat:'forb', name:{ru:'Ограничение нагрузки на ось',           kz:'Өстегі жүктемені шектеу'} },
+  '3.13':  { img:'signs/3.13.svg',  cat:'forb', name:{ru:'Ограничение высоты',                    kz:'Биіктікті шектеу'} },
+  '3.20':  { img:'signs/3.20.svg',  cat:'forb', name:{ru:'Обгон запрещён',                        kz:'Қуып өту тыйым салынған'} },
+  '3.24':  { img:'signs/3.24.svg',  cat:'forb', name:{ru:'Ограничение максимальной скорости',     kz:'Ең жоғары жылдамдықты шектеу'} },
+};
+
+const TOTAL = 15;
+const TEXTS = {
+  ru: {
+    homeSub: 'Определи к какой группе относится каждый знак ПДД Казахстана',
+    homeDesc: 'Тебе будет показан знак с названием. Нажми на нужную категорию — <strong>15 знаков</strong>, смешанных из всех групп.',
+    btnStart: 'Начать →',
+    roundLbl: (c,t) => `Знак ${c} из ${t}`,
+    qLabel: 'К какой категории относится этот знак?',
+    warnTitle:'Предупреждающие', warnHint:'Серия 1.x — опасность впереди',
+    forbTitle:'Запрещающие',     forbHint:'Серия 3.x — запрет действий',
+    prioTitle:'Приоритет',       prioHint:'Серия 2.x — право проезда',
+    feedOk:  (name)             => `✅ Верно! «${name}» — правильная категория`,
+    feedErr: (name, cat, chosen)=> `❌ Ошибка! «${name}» — это «${catName('ru',cat)}», а не «${catName('ru',chosen)}»`,
+    btnNext: 'Следующий →', btnLast: 'Завершить →',
+    verdicts: ['🏆 Эксперт ПДД!','🎉 Отличный результат!','👍 Неплохо!','📚 Нужно повторить'],
+    hints: ['Все ответы верны!','Почти идеально!','Есть над чем поработать.','Учи знаки внимательнее!'],
+    ptsLbl:'ПРАВИЛЬНЫХ ОТВЕТОВ', correctLbl:'Верно', wrongLbl:'Неверно', pctLbl:'Точность',
+    logTitle:'Разбор ответов', btnRetry:'Ещё раз →', btnHome:'На главную',
+    catLabels:{warn:'Предупреждающий',forb:'Запрещающий',prio:'Приоритет'},
+  },
+  kz: {
+    homeSub: 'Қазақстанның ЖҚЕ белгісі қай топқа жататынын анықтаңыз',
+    homeDesc: 'Сізге атауы бар белгі көрсетіледі. Дұрыс санатты басыңыз — барлық топтардан <strong>15 белгі</strong>.',
+    btnStart: 'Бастау →',
+    roundLbl: (c,t) => `Белгі ${c} / ${t}`,
+    qLabel: 'Бұл белгі қай санатқа жатады?',
+    warnTitle:'Ескертетін', warnHint:'1.x сериясы — алдыңғы қауіп',
+    forbTitle:'Тыйым салатын', forbHint:'3.x сериясы — әрекетке тыйым',
+    prioTitle:'Басымдық', prioHint:'2.x сериясы — өту құқығы',
+    feedOk:  (name)             => `✅ Дұрыс! «${name}» — дұрыс санат`,
+    feedErr: (name, cat, chosen)=> `❌ Қате! «${name}» — «${catName('kz',cat)}», «${catName('kz',chosen)}» емес`,
+    btnNext: 'Келесі →', btnLast: 'Аяқтау →',
+    verdicts: ['🏆 ЖҚЕ сарапшысы!','🎉 Тамаша нәтиже!','👍 Жаман емес!','📚 Қайталау керек'],
+    hints: ['Барлық жауаптар дұрыс!','Іс жүзінде мінсіз!','Жұмыс істейтін нәрсе бар.','Белгілерді мұқият оқы!'],
+    ptsLbl:'ДҰРЫС ЖАУАПТАР', correctLbl:'Дұрыс', wrongLbl:'Қате', pctLbl:'Дәлдік',
+    logTitle:'Жауаптарды талдау', btnRetry:'Қайта өту →', btnHome:'Басты бетке',
+    catLabels:{warn:'Ескертетін',forb:'Тыйым салатын',prio:'Басымдық'},
+  }
+};
+
+function catName(l, cat) { return TEXTS[l].catLabels[cat]; }
+
+let lang = 'ru';
+let questions = [], current = 0, score = 0, log = [], answered = false;
+
+function toggleLang() {
+  lang = lang === 'ru' ? 'kz' : 'ru';
+  applyLang();
+}
+
+function applyLang() {
+  const t = TEXTS[lang];
+  document.getElementById('home-sub').textContent      = t.homeSub;
+  document.getElementById('home-desc').innerHTML       = t.homeDesc;
+  document.getElementById('btn-start').textContent     = t.btnStart;
+  document.getElementById('lbl-warn').textContent      = t.warnTitle;
+  document.getElementById('lbl-forb').textContent      = t.forbTitle;
+  document.getElementById('lbl-prio').textContent      = t.prioTitle;
+  document.getElementById('zone-warn-title').textContent = t.warnTitle;
+  document.getElementById('zone-warn-hint').textContent  = t.warnHint;
+  document.getElementById('zone-forb-title').textContent = t.forbTitle;
+  document.getElementById('zone-forb-hint').textContent  = t.forbHint;
+  document.getElementById('zone-prio-title').textContent = t.prioTitle;
+  document.getElementById('zone-prio-hint').textContent  = t.prioHint;
+  document.getElementById('q-label').textContent       = t.qLabel;
+  if (questions.length && current < questions.length) renderQuestion();
+}
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function generateQuestions() {
+  const keys = Object.keys(SIGNS);
+  const warn = shuffle(keys.filter(k => SIGNS[k].cat === 'warn'));
+  const forb = shuffle(keys.filter(k => SIGNS[k].cat === 'forb'));
+  const prio = shuffle(keys.filter(k => SIGNS[k].cat === 'prio'));
+  // Минимум по 2 предупреждающих, 2 запрещающих, 1 приоритет
+  let picked = [warn[0], warn[1], forb[0], forb[1], prio[0]];
+  const used = new Set(picked);
+  const rest = shuffle(keys.filter(k => !used.has(k)));
+  picked = shuffle([...picked, ...rest.slice(0, TOTAL - picked.length)]);
+  return picked.slice(0, TOTAL).map(code => ({ code, ...SIGNS[code] }));
+}
+
+function startQuiz() {
+  questions = generateQuestions();
+  current = 0; score = 0; log = []; answered = false;
+  document.getElementById('score-display').textContent = '0';
+  show('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  const t = TEXTS[lang];
+  answered = false;
+
+  document.getElementById('round-label').textContent  = t.roundLbl(current + 1, TOTAL);
+  document.getElementById('prog-fill').style.width    = (current / TOTAL * 100) + '%';
+  document.getElementById('q-label').textContent      = t.qLabel;
+
+  const img = document.getElementById('sign-img');
+  const ph  = document.getElementById('sign-ph');
+  img.style.display = 'block';
+  ph.style.display  = 'none';
+  img.src = q.img;
+  img.alt = q.name[lang];
+  img.onerror = () => { img.style.display = 'none'; ph.style.display = 'flex'; };
+
+  // Только название — без кода знака
+  document.getElementById('sign-name').textContent = q.name[lang];
+
+  ['warn','forb','prio'].forEach(c => {
+    const z = document.getElementById('zone-' + c);
+    z.classList.remove('correct','wrong','drag-over');
+    z.style.pointerEvents = '';
+  });
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('btn-next').className = 'btn-next';
+
+  // Перезапуск анимации карточки
+  const card = document.getElementById('sign-card');
+  card.style.animation = 'none';
+  requestAnimationFrame(() => { card.style.animation = 'fadeUp .3s ease'; });
+}
+
+function answer(chosen) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const isCorrect = chosen === q.cat;
+  const t = TEXTS[lang];
+
+  ['warn','forb','prio'].forEach(c => {
+    document.getElementById('zone-' + c).style.pointerEvents = 'none';
+  });
+
+  if (isCorrect) {
+    score++;
+    document.getElementById('score-display').textContent = score;
+    document.getElementById('zone-' + chosen).classList.add('correct');
+    showFeedback('ok', t.feedOk(q.name[lang]));
+  } else {
+    document.getElementById('zone-' + chosen).classList.add('wrong');
+    document.getElementById('zone-' + q.cat).classList.add('correct');
+    showFeedback('err', t.feedErr(q.name[lang], q.cat, chosen));
+  }
+
+  log.push({ name: q.name, cat: q.cat, chosen, correct: isCorrect });
+
+  const btnN = document.getElementById('btn-next');
+  btnN.className   = 'btn-next show';
+  btnN.textContent = current === TOTAL - 1 ? t.btnLast : t.btnNext;
+}
+
+function onDragOver(e, cat) { e.preventDefault(); document.getElementById('zone-' + cat).classList.add('drag-over'); }
+function onDragLeave(cat)   { document.getElementById('zone-' + cat).classList.remove('drag-over'); }
+function onDrop(e, cat)     { e.preventDefault(); onDragLeave(cat); answer(cat); }
+
+function showFeedback(type, msg) {
+  const fb = document.getElementById('feedback');
+  fb.className   = `feedback ${type} show`;
+  fb.textContent = msg;
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= TOTAL) showResults();
+  else renderQuestion();
+}
+
+function showResults() {
+  show('screen-result');
+  const t     = TEXTS[lang];
+  const wrong = TOTAL - score;
+  const pct   = Math.round(score / TOTAL * 100);
+  const vi    = pct === 100 ? 0 : pct >= 80 ? 1 : pct >= 60 ? 2 : 3;
+
+  document.getElementById('res-verdict').textContent  = t.verdicts[vi];
+  document.getElementById('res-hint').textContent     = t.hints[vi];
+  document.getElementById('res-pts').textContent      = score + '/' + TOTAL;
+  document.getElementById('res-pts-lbl').textContent  = t.ptsLbl;
+  document.getElementById('r-correct').textContent    = score;
+  document.getElementById('r-correct-lbl').textContent= t.correctLbl;
+  document.getElementById('r-wrong').textContent      = wrong;
+  document.getElementById('r-wrong-lbl').textContent  = t.wrongLbl;
+  document.getElementById('r-pct').textContent        = pct + '%';
+  document.getElementById('r-pct-lbl').textContent    = t.pctLbl;
+  document.getElementById('log-title').textContent    = t.logTitle;
+  document.getElementById('btn-retry').textContent    = t.btnRetry;
+  document.getElementById('btn-home-res').textContent = t.btnHome;
+
+  const logEl = document.getElementById('log-items');
+  logEl.innerHTML = '';
+  log.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'log-item';
+    div.innerHTML = `
+      <span class="log-icon">${item.correct ? '✅' : '❌'}</span>
+      <span class="log-name">${item.name[lang]}</span>
+      <span class="log-cat ${item.cat}">${catName(lang, item.cat)}</span>
+    `;
+    logEl.appendChild(div);
+  });
+}
+
+function show(id) {
+  ['screen-home','screen-quiz','screen-result'].forEach(s => {
+    const el = document.getElementById(s);
+    el.style.display   = 'none';
+    el.style.animation = 'none';
+  });
+  const el = document.getElementById(id);
+  el.style.display = 'block';
+  requestAnimationFrame(() => { el.style.animation = 'fadeUp .35s ease'; });
+}
+
+function goHome() { show('screen-home'); }
+
+show('screen-home');
+</script>
+</body>
+</html>

@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ПДД РК — Знаки: Верно / Неверно</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800;900&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky:    #00AEEF;
+  --sky-dk: #0090c8;
+  --sky-lt: #e0f6ff;
+  --gold:   #F0C040;
+  --gold-dk:#c89a10;
+  --gold-lt:#fdf6dc;
+  --ink:    #0a1628;
+  --ink2:   #1a2d4a;
+  --off:    #f5f8fc;
+  --border: #d4e0ee;
+  --text:   #0f1e35;
+  --muted:  #5e7a99;
+  --white:  #ffffff;
+  --green:  #12a150;
+  --red:    #e53935;
+  --radius: 14px;
+  --shadow: 0 4px 20px rgba(0,100,170,0.10);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Mulish', sans-serif;
+  background: var(--off);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── HEADER ── */
+header {
+  width: 100%;
+  background: var(--ink);
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 62px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.30);
+}
+.logo {
+  font-family: 'Unbounded', sans-serif;
+  font-size: .85rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+.logo span { color: var(--gold); }
+.hdr-right { display: flex; align-items: center; gap: 10px; }
+.lang-btn {
+  font-family:'Unbounded',sans-serif; font-size:11px; font-weight:700;
+  padding: 5px 14px;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.22);
+  border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.2s;
+  letter-spacing: .04em;
+  color: #fff;
+}
+.lang-btn .lang-ru { color: #fff; }
+.lang-btn .lang-kz { color: var(--gold); }
+.lang-btn:hover { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.45); }
+
+main { width:100%; max-width:700px; padding:2rem 1.25rem 4rem; flex:1; }
+
+/* ── HOME ── */
+#screen-home { display: block; animation: fadeUp .35s ease; }
+#screen-quiz { display: none; }
+#screen-result { display: none; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+.home-hero {
+  background: var(--ink);
+  border-radius: var(--radius);
+  padding: 2.75rem 2.5rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.75rem;
+}
+.home-hero::before {
+  content:''; position:absolute; top:0; right:0;
+  width:280px; height:280px;
+  background: radial-gradient(circle at 75% 25%, rgba(0,174,239,0.15) 0%, transparent 65%);
+  pointer-events:none;
+}
+.hero-tag {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(240,192,64,0.12);
+  border: 1px solid rgba(240,192,64,0.3);
+  color:var(--gold);
+  font-family:'Unbounded',sans-serif; font-size:10px; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase;
+  padding:5px 12px; border-radius:100px; margin-bottom:1.1rem;
+}
+.hero-title {
+  font-family:'Unbounded',sans-serif;
+  font-size:clamp(1.4rem,4vw,2.2rem);
+  font-weight:900; line-height:1.1; margin-bottom:.75rem;
+  letter-spacing:-.02em;
+}
+.hero-title em { color:var(--sky); font-style:normal; }
+.hero-sub {
+  color:rgba(255,255,255,0.55); font-size:14px; line-height:1.7;
+  max-width:480px; margin-bottom:2rem;
+}
+.hero-desc {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+.hero-desc strong { color: var(--gold); }
+.btn-primary {
+  font-family:'Unbounded',sans-serif; font-size:13px; font-weight:700; letter-spacing:.02em;
+  padding:1rem 2rem; background:var(--gold); color:var(--ink);
+  border:none; border-radius:var(--radius); cursor:pointer; text-align:center;
+  transition:background .18s,transform .15s,box-shadow .18s;
+  box-shadow:0 4px 16px rgba(240,192,64,0.35);
+}
+.btn-primary:hover { background:#f5cc55; transform:translateY(-2px); box-shadow:0 6px 22px rgba(240,192,64,0.45); }
+.btn-outline {
+  font-family:'Mulish',sans-serif; font-size:14px; font-weight:700;
+  padding:.85rem 2rem; background:#fff; color:var(--ink2);
+  border:1.5px solid var(--border); border-radius:var(--radius);
+  cursor:pointer; text-align:center; transition:border-color .18s, box-shadow .18s;
+  width: 100%;
+}
+.btn-outline:hover { border-color:var(--sky); box-shadow:0 2px 10px rgba(0,174,239,0.12); }
+
+/* ── QUIZ ── */
+.quiz-top {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:.85rem; flex-wrap:wrap; gap:8px;
+}
+.round-badge {
+  font-family:'Unbounded',sans-serif; font-size:12px; font-weight:600;
+  color:var(--sky-dk); background:var(--sky-lt); padding:5px 14px; border-radius:100px;
+  border: 1px solid rgba(0,174,239,0.2);
+}
+.score-badge { font-family:'Unbounded',sans-serif; font-size:14px; font-weight:700; color:var(--gold-dk); }
+.prog-track {
+  width:100%; height:5px; background:var(--border); border-radius:6px;
+  margin-bottom:1.75rem; overflow:hidden;
+}
+.prog-fill { height:100%; background: linear-gradient(90deg, var(--sky), var(--gold)); border-radius:6px; transition:width .4s ease; }
+
+/* Card */
+.question-card {
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.25rem;
+  transition: border-color .3s;
+  animation: fadeUp .3s ease;
+}
+.question-card.correct { border-color: var(--green); background: #f0fdf6; }
+.question-card.wrong   { border-color: var(--red);   background: #fff5f5; }
+
+.sign-img-wrap {
+  width: 140px; height: 140px;
+  margin: 0 auto 1.25rem;
+  background: var(--off);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+}
+.sign-img-wrap img {
+  width: 110px; height: 110px;
+  object-fit: contain;
+}
+.sign-img-placeholder {
+  width: 110px; height: 110px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--sky-lt);
+  border-radius: 8px;
+  font-family:'Unbounded',sans-serif; font-size:1.1rem; font-weight:800;
+  color: var(--sky-dk);
+}
+
+.desc-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+.sign-code-label {
+  font-family:'Unbounded',sans-serif; font-size:11px;
+  color: var(--muted); font-weight:600;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+/* Buttons row */
+.tf-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  max-width: 380px;
+  margin: 0 auto;
+}
+.btn-tf {
+  font-family:'Unbounded',sans-serif; font-size:14px; font-weight:800;
+  padding: 1rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all .18s;
+  background: #fff;
+  color: var(--ink);
+  letter-spacing: .02em;
+}
+.btn-tf.true-btn:hover  { border-color: var(--green); background: #f0fdf6; color: var(--green); transform:translateY(-2px); box-shadow:0 6px 16px rgba(18,161,80,0.15); }
+.btn-tf.false-btn:hover { border-color: var(--red);   background: #fff5f5; color: var(--red);   transform:translateY(-2px); box-shadow:0 6px 16px rgba(229,57,53,0.15); }
+.btn-tf:disabled { pointer-events: none; opacity: .5; }
+.btn-tf.picked-correct { border-color:var(--green); background:#e8f8ef; color:var(--green); opacity:1 !important; }
+.btn-tf.picked-wrong   { border-color:var(--red);   background:#ffeaea; color:var(--red);   opacity:1 !important; }
+.btn-tf.reveal-correct { border-color:var(--green); background:#e8f8ef; color:var(--green); opacity:1 !important; }
+
+/* Feedback */
+.feedback {
+  max-width:520px; margin:0 auto 1rem; padding:.95rem 1.2rem;
+  border-radius:var(--radius); font-size:14px; line-height:1.65; font-weight:600;
+  display:none; border-left:4px solid transparent;
+}
+.feedback.show { display:block; animation:fadeUp .2s; }
+.feedback.ok  { background:#e8f8ef; border-color:var(--green); color:#0a6630; }
+.feedback.err { background:#ffeaea; border-color:var(--red);   color:#8b0000; }
+
+.btn-next-wrap { text-align:center; }
+.btn-next {
+  display:none; font-family:'Unbounded',sans-serif; font-size:13px; font-weight:700;
+  letter-spacing:.02em; padding:.85rem 2.25rem; background:var(--ink); color:#fff;
+  border:none; border-radius:var(--radius); cursor:pointer;
+  transition:background .18s, transform .15s;
+  box-shadow:0 4px 16px rgba(10,22,40,0.25);
+}
+.btn-next.show { display:inline-block; animation:fadeUp .2s; }
+.btn-next:hover { background:var(--ink2); transform:translateY(-1px); }
+
+/* ── RESULTS ── */
+.res-hero {
+  background: var(--ink);
+  border-radius: var(--radius); padding:2.75rem 2rem;
+  color:#fff; text-align:center; margin-bottom:1.5rem;
+  position:relative; overflow:hidden;
+}
+.res-hero::before {
+  content:''; position:absolute; top:-20px; right:-10px;
+  width:180px; height:180px;
+  border-radius:50%;
+  background: radial-gradient(circle, rgba(240,192,64,0.08) 0%, transparent 70%);
+  pointer-events:none;
+}
+.res-verdict { font-family:'Unbounded',sans-serif; font-size:1.3rem; font-weight:800; margin-bottom:.4rem; letter-spacing:-.02em; }
+.res-hint    { color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:1.75rem; }
+.res-pts     { font-family:'Unbounded',sans-serif; font-size:3.5rem; font-weight:900; line-height:1; color:var(--gold); }
+.res-pts-lbl { font-size:11px; color:rgba(255,255,255,0.38); margin-top:6px; letter-spacing:.1em; text-transform:uppercase; }
+.res-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:.875rem; margin-bottom:1.5rem;
+}
+.res-card {
+  background:#fff; border:1px solid var(--border); border-radius:var(--radius);
+  padding:1.1rem; text-align:center; box-shadow:var(--shadow);
+}
+.res-val { font-family:'Unbounded',sans-serif; font-size:1.75rem; font-weight:800; line-height:1; margin-bottom:5px; }
+.res-val.g { color:var(--green); }
+.res-val.r { color:var(--red); }
+.res-val.b { color:var(--sky-dk); }
+.res-key { font-size:11px; color:var(--muted); font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
+.res-btns { display:flex; flex-direction:column; gap:.75rem; }
+
+/* Answers log */
+.answers-log {
+  background:#fff; border:1px solid var(--border); border-radius:var(--radius);
+  padding:1.25rem; margin-bottom:1.5rem; box-shadow:var(--shadow);
+}
+.answers-log-title {
+  font-family:'Unbounded',sans-serif; font-size:11px; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:1rem;
+}
+.log-item {
+  display:flex; align-items:center; gap:12px;
+  padding:.6rem .5rem; border-bottom:1px solid var(--border);
+  font-size:13px;
+}
+.log-item:last-child { border-bottom:none; }
+.log-icon { font-size:1.1rem; min-width:22px; text-align:center; }
+.log-code { font-family:'Unbounded',sans-serif; font-size:10px; font-weight:700; color:var(--muted); min-width:40px; }
+.log-name { flex:1; font-weight:600; color:var(--text); }
+.log-verdict { font-family:'Unbounded',sans-serif; font-size:10px; font-weight:800; }
+.log-verdict.ok  { color:var(--green); }
+.log-verdict.err { color:var(--red); }
+
+footer {
+  width:100%; background:var(--ink); text-align:center;
+  padding:1rem; font-size:12px; color:rgba(255,255,255,0.28); font-weight:600;
+}
+footer code { color:rgba(255,255,255,0.5); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">ПДД <span>РК</span></div>
+  <div class="hdr-right">
+    <button class="lang-btn" onclick="toggleLang()">
+      <span class="lang-ru" id="lbl-ru">РУС</span>
+      <span style="color:rgba(255,255,255,0.3)">|</span>
+      <span class="lang-kz" id="lbl-kz">ҚАЗ</span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <div id="screen-home">
+    <div class="home-hero">
+      <div class="hero-tag">🚦 Дорожные знаки</div>
+      <div class="hero-title">Верно или<br><em>Неверно?</em></div>
+      <div class="hero-sub" data-ru="Проверь знание знаков ПДД Республики Казахстан" data-kz="Қазақстан Республикасының ЖҚЕ белгілерін тексер">
+        Проверь знание знаков ПДД Республики Казахстан
+      </div>
+      <div class="hero-desc">
+        <span data-ru="Тебе будет показан <strong>дорожный знак</strong> и <strong>описание</strong>. Твоя задача — определить, совпадают ли они." 
+              data-kz="Сізге <strong>жол белгісі</strong> және <strong>сипаттама</strong> көрсетіледі. Сіздің міндетіңіз — олар сәйкес келе ме, жоқ па, анықтау.">
+          Тебе будет показан <strong>дорожный знак</strong> и <strong>описание</strong>. Твоя задача — определить, совпадают ли они.
+        </span>
+      </div>
+      <button class="btn-primary" onclick="startQuiz()" data-ru="Начать тест →" data-kz="Тестті бастау →">Начать тест →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz">
+    <div class="quiz-top">
+      <div class="round-badge" id="round-label">Вопрос 1 из 15</div>
+      <div class="score-badge">⭐ <span id="score-display">0</span></div>
+    </div>
+    <div class="prog-track">
+      <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+
+    <div class="question-card" id="question-card">
+      <div class="sign-img-wrap">
+        <div class="sign-img-placeholder" id="sign-placeholder"></div>
+        <img id="sign-img" src="" alt="" style="display:none; width:110px; height:110px; object-fit:contain;">
+      </div>
+      <div class="desc-text" id="desc-text">—</div>
+      <span class="sign-code-label" id="sign-code-shown"></span>
+      <div class="tf-row">
+        <button class="btn-tf true-btn" id="btn-true" onclick="answer(true)">
+          ✅ <span data-ru="ВЕРНО" data-kz="ДҰРЫС">ВЕРНО</span>
+        </button>
+        <button class="btn-tf false-btn" id="btn-false" onclick="answer(false)">
+          ❌ <span data-ru="НЕВЕРНО" data-kz="ДҰРЫС ЕМЕС">НЕВЕРНО</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+    <div class="btn-next-wrap">
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">
+        <span data-ru="Следующий →" data-kz="Келесі →">Следующий →</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="screen-result">
+    <div class="res-hero">
+      <div class="res-verdict" id="res-verdict">Отличный результат!</div>
+      <div class="res-hint" id="res-hint">15 вопросов пройдено</div>
+      <div class="res-pts" id="res-pts">0</div>
+      <div class="res-pts-lbl" data-ru="ПРАВИЛЬНЫХ ОТВЕТОВ" data-kz="ДҰРЫС ЖАУАПТАР">ПРАВИЛЬНЫХ ОТВЕТОВ</div>
+    </div>
+
+    <div class="res-grid">
+      <div class="res-card">
+        <div class="res-val g" id="r-correct">0</div>
+        <div class="res-key" data-ru="Верно" data-kz="Дұрыс">Верно</div>
+      </div>
+      <div class="res-card">
+        <div class="res-val r" id="r-wrong">0</div>
+        <div class="res-key" data-ru="Неверно" data-kz="Қате">Неверно</div>
+      </div>
+      <div class="res-card">
+        <div class="res-val b" id="r-pct">0%</div>
+        <div class="res-key" data-ru="Точность" data-kz="Дәлдік">Точность</div>
+      </div>
+    </div>
+
+    <div class="answers-log" id="answers-log">
+      <div class="answers-log-title" data-ru="Разбор ответов" data-kz="Жауаптарды талдау">Разбор ответов</div>
+      <div id="log-items"></div>
+    </div>
+
+    <div class="res-btns">
+      <button class="btn-primary" onclick="startQuiz()" data-ru="Пройти ещё раз →" data-kz="Қайта өту →">Пройти ещё раз →</button>
+      <button class="btn-outline" onclick="goHome()" data-ru="На главную" data-kz="Басты бетке">На главную</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>ПДД РК · <code>Верно / Неверно</code> · 2025</footer>
+
+<script>
+const SIGN_BANK = {
+  '1.1':   { img: '1.1.png',   name: { ru: 'Железнодорожный переезд со шлагбаумом', kz: 'Шлагбаумы бар теміржол өткелі' } },
+  '1.2':   { img: '1.2.png',   name: { ru: 'Железнодорожный переезд без шлагбаума', kz: 'Шлагбаумсыз теміржол өткелі' } },
+  '1.3.1': { img: '1.3.1.png', name: { ru: 'Однопутная железная дорога',            kz: 'Бір жолды теміржол' } },
+  '1.6':   { img: '1.6.png',   name: { ru: 'Пересечение равнозначных дорог',        kz: 'Тең мәнді жолдардың қиылысы' } },
+  '1.7':   { img: '1.7.png',   name: { ru: 'Пересечение с круговым движением',      kz: 'Айналма қозғалыспен қиылысу' } },
+  '1.8':   { img: '1.8.png',   name: { ru: 'Светофорное регулирование',             kz: 'Светофорлық реттеу' } },
+  '1.11.1':{ img: '1.11.1.png',name: { ru: 'Опасный поворот направо',               kz: 'Оңға қауіпті бұрылыс' } },
+  '1.12.1':{ img: '1.12.1.png',name: { ru: 'Опасные повороты',                      kz: 'Қауіпті бұрылыстар' } },
+  '1.13':  { img: '1.13.png',  name: { ru: 'Крутой спуск',                          kz: 'Тік түсу' } },
+  '1.14':  { img: '1.14.png',  name: { ru: 'Крутой подъём',                         kz: 'Тік көтерілу' } },
+  '1.15':  { img: '1.15.png',  name: { ru: 'Скользкая дорога',                      kz: 'Тайғақ жол' } },
+  '1.16':  { img: '1.16.png',  name: { ru: 'Неровная дорога',                       kz: 'Тегіс емес жол' } },
+  '1.17':  { img: '1.17.png',  name: { ru: 'Выброс гравия',                         kz: 'Қиыршық тас шашырауы' } },
+  '1.18':  { img: '1.18.png',  name: { ru: 'Опасная обочина',                       kz: 'Қауіпті жол жиегі' } },
+  '1.19':  { img: '1.19.png',  name: { ru: 'Двустороннее движение',                 kz: 'Екіжақты қозғалыс' } },
+  '1.20':  { img: '1.20.png',  name: { ru: 'Пешеходный переход',                    kz: 'Жаяу жүргіншілер өткелі' } },
+  '1.22':  { img: '1.22.png',  name: { ru: 'Пересечение с велосипедной дорожкой',   kz: 'Велосипед жолымен қиылысу' } },
+  '1.23':  { img: '1.23.png',  name: { ru: 'Дорожные работы',                       kz: 'Жол жұмыстары' } },
+  '1.24':  { img: '1.24.png',  name: { ru: 'Перегон скота',                         kz: 'Мал айдау' } },
+  '1.25':  { img: '1.25.png',  name: { ru: 'Дикие животные',                        kz: 'Жабайы жануарлар' } },
+  '1.26':  { img: '1.26.png',  name: { ru: 'Падение камней',                        kz: 'Тас құлауы' } },
+  '1.27':  { img: '1.27.png',  name: { ru: 'Боковой ветер',                         kz: 'Бүйір жел' } },
+  '1.30':  { img: '1.30.png',  name: { ru: 'Прочие опасности',                      kz: 'Өзге қауіптер' } },
+};
+
+const TOTAL = 15;
+let lang = 'ru';
+let questions = [];
+let current = 0;
+let score = 0;
+let answered = false;
+let log = [];
+
+function toggleLang() {
+  lang = lang === 'ru' ? 'kz' : 'ru';
+  applyLang();
+}
+
+function applyLang() {
+  document.querySelectorAll('[data-ru]').forEach(el => {
+    const txt = el.getAttribute('data-' + lang);
+    if (txt) el.innerHTML = txt;
+  });
+  // Update TF button inner spans
+  document.querySelectorAll('.btn-tf span[data-ru]').forEach(el => {
+    el.textContent = el.getAttribute('data-' + lang);
+  });
+  if (questions.length && current < questions.length) {
+    renderQuestion();
+  }
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function generateQuestions() {
+  const keys = Object.keys(SIGN_BANK);
+  const selected = shuffle([...keys]).slice(0, TOTAL);
+  return selected.map(code => {
+    const isTrue = Math.random() > 0.45; // slight lean toward true for variety
+    let shownName;
+    if (isTrue) {
+      shownName = SIGN_BANK[code].name;
+    } else {
+      // Pick a random different sign's name
+      let otherKeys = keys.filter(k => k !== code);
+      let otherCode = otherKeys[Math.floor(Math.random() * otherKeys.length)];
+      shownName = SIGN_BANK[otherCode].name;
+    }
+    return { code, isTrue, shownName };
+  });
+}
+
+function startQuiz() {
+  questions = generateQuestions();
+  current = 0;
+  score = 0;
+  log = [];
+  answered = false;
+  document.getElementById('score-display').textContent = '0';
+  show('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  const card = document.getElementById('question-card');
+  card.className = 'question-card';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('btn-next').className = 'btn-next';
+  document.getElementById('btn-true').disabled = false;
+  document.getElementById('btn-false').disabled = false;
+  document.getElementById('btn-true').className = 'btn-tf true-btn';
+  document.getElementById('btn-false').className = 'btn-tf false-btn';
+  answered = false;
+
+  // Progress
+  const pct = (current / TOTAL) * 100;
+  document.getElementById('prog-fill').style.width = pct + '%';
+
+  // Label
+  const roundLbl = lang === 'ru'
+    ? `Вопрос ${current + 1} из ${TOTAL}`
+    : `Сұрақ ${current + 1} / ${TOTAL}`;
+  document.getElementById('round-label').textContent = roundLbl;
+
+  // Sign image
+  const img = document.getElementById('sign-img');
+  const placeholder = document.getElementById('sign-placeholder');
+  img.src = 'signs/' + SIGN_BANK[q.code].img;
+  img.style.display = 'block';
+  placeholder.style.display = 'none';
+  img.onerror = function() {
+    img.style.display = 'none';
+    placeholder.style.display = 'flex';
+    placeholder.textContent = q.code;
+  };
+
+  // Description (shown name)
+  document.getElementById('desc-text').textContent = q.shownName[lang];
+  document.getElementById('sign-code-shown').textContent = '';
+}
+
+function answer(userSaysTrue) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const correct = (userSaysTrue === q.isTrue);
+
+  const card = document.getElementById('question-card');
+  const fb = document.getElementById('feedback');
+  const btnT = document.getElementById('btn-true');
+  const btnF = document.getElementById('btn-false');
+  btnT.disabled = true;
+  btnF.disabled = true;
+
+  // Reveal correct sign code
+  document.getElementById('sign-code-shown').textContent = q.code;
+
+  if (correct) {
+    score++;
+    document.getElementById('score-display').textContent = score;
+    card.classList.add('correct');
+    if (userSaysTrue) btnT.classList.add('picked-correct');
+    else btnF.classList.add('picked-correct');
+    fb.className = 'feedback ok show';
+    if (q.isTrue) {
+      fb.textContent = lang === 'ru'
+        ? `✅ Верно! Знак ${q.code} — «${SIGN_BANK[q.code].name[lang]}»`
+        : `✅ Дұрыс! ${q.code} белгісі — «${SIGN_BANK[q.code].name[lang]}»`;
+    } else {
+      fb.textContent = lang === 'ru'
+        ? `✅ Верно! Описание не совпадает. Знак ${q.code} — «${SIGN_BANK[q.code].name[lang]}»`
+        : `✅ Дұрыс! Сипаттама сәйкес келмейді. ${q.code} белгісі — «${SIGN_BANK[q.code].name[lang]}»`;
+    }
+  } else {
+    card.classList.add('wrong');
+    if (userSaysTrue) {
+      btnT.classList.add('picked-wrong');
+      btnF.classList.add('reveal-correct');
+    } else {
+      btnF.classList.add('picked-wrong');
+      btnT.classList.add('reveal-correct');
+    }
+    fb.className = 'feedback err show';
+    if (q.isTrue) {
+      fb.textContent = lang === 'ru'
+        ? `❌ Ошибка! Описание верное. Знак ${q.code} — «${SIGN_BANK[q.code].name[lang]}»`
+        : `❌ Қате! Сипаттама дұрыс. ${q.code} белгісі — «${SIGN_BANK[q.code].name[lang]}»`;
+    } else {
+      fb.textContent = lang === 'ru'
+        ? `❌ Ошибка! Описание не совпадает. Знак ${q.code} — «${SIGN_BANK[q.code].name[lang]}»`
+        : `❌ Қате! Сипаттама сәйкес келмейді. ${q.code} белгісі — «${SIGN_BANK[q.code].name[lang]}»`;
+    }
+  }
+
+  log.push({ code: q.code, correct, trueName: SIGN_BANK[q.code].name, shownName: q.shownName, isTrue: q.isTrue });
+
+  const btnNext = document.getElementById('btn-next');
+  btnNext.className = 'btn-next show';
+  const isLast = current === TOTAL - 1;
+  const nextSpan = btnNext.querySelector('span[data-ru]') || btnNext;
+  if (isLast) {
+    btnNext.innerHTML = lang === 'ru' ? 'Завершить →' : 'Аяқтау →';
+  } else {
+    btnNext.innerHTML = `<span data-ru="Следующий →" data-kz="Келесі →">${lang === 'ru' ? 'Следующий →' : 'Келесі →'}</span>`;
+  }
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= TOTAL) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  show('screen-result');
+  const wrong = TOTAL - score;
+  const pct = Math.round((score / TOTAL) * 100);
+
+  document.getElementById('res-pts').textContent = score + '/' + TOTAL;
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-wrong').textContent = wrong;
+  document.getElementById('r-pct').textContent = pct + '%';
+
+  let verdict, hint;
+  if (pct === 100) {
+    verdict = lang === 'ru' ? '🏆 Эксперт ПДД!' : '🏆 ЖҚЕ сарапшысы!';
+    hint = lang === 'ru' ? 'Все ответы верны — великолепно!' : 'Барлық жауаптар дұрыс — тамаша!';
+  } else if (pct >= 80) {
+    verdict = lang === 'ru' ? '🎉 Отличный результат!' : '🎉 Тамаша нәтиже!';
+    hint = lang === 'ru' ? 'Почти идеально! Ещё чуть-чуть.' : 'Іс жүзінде мінсіз! Тағы аздап.';
+  } else if (pct >= 60) {
+    verdict = lang === 'ru' ? '👍 Неплохо!' : '👍 Жаман емес!';
+    hint = lang === 'ru' ? 'Есть над чем поработать.' : 'Жұмыс істейтін нәрсе бар.';
+  } else {
+    verdict = lang === 'ru' ? '📚 Нужно повторить' : '📚 Қайталау керек';
+    hint = lang === 'ru' ? 'Изучи знаки внимательнее!' : 'Белгілерді мұқият оқып шық!';
+  }
+
+  document.getElementById('res-verdict').textContent = verdict;
+  document.getElementById('res-hint').textContent = hint;
+
+  // Build log
+  const logEl = document.getElementById('log-items');
+  logEl.innerHTML = '';
+  log.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'log-item';
+    div.innerHTML = `
+      <span class="log-icon">${item.correct ? '✅' : '❌'}</span>
+      <span class="log-code">${item.code}</span>
+      <span class="log-name">${item.trueName[lang]}</span>
+      <span class="log-verdict ${item.correct ? 'ok' : 'err'}">${item.correct ? (lang==='ru'?'ВЕРНО':'ДҰРЫС') : (lang==='ru'?'ОШИБКА':'ҚАТЕ')}</span>
+    `;
+    logEl.appendChild(div);
+  });
+
+  // Apply lang to result screen
+  document.querySelectorAll('#screen-result [data-ru]').forEach(el => {
+    const txt = el.getAttribute('data-' + lang);
+    if (txt) el.innerHTML = txt;
+  });
+  document.getElementById('res-pts-lbl').textContent = lang === 'ru' ? 'ПРАВИЛЬНЫХ ОТВЕТОВ' : 'ДҰРЫС ЖАУАПТАР';
+  document.getElementById('res-btns').querySelectorAll('button[data-ru]').forEach(el => {
+    el.textContent = el.getAttribute('data-' + lang);
+  });
+}
+
+function show(id) {
+  ['screen-home','screen-quiz','screen-result'].forEach(s => {
+    document.getElementById(s).style.display = 'none';
+  });
+  const el = document.getElementById(id);
+  el.style.display = 'block';
+  el.style.animation = 'none';
+  requestAnimationFrame(() => { el.style.animation = 'fadeUp .35s ease'; });
+}
+
+function goHome() {
+  show('screen-home');
+}
+
+// Init
+show('screen-home');
+</script>
+</body>
+</html>

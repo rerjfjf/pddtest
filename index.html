@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ПДД КЗ — Тренажёр знаков</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800;900&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--sky:#00AEEF;--sky-dk:#0090c8;--sky-lt:#e0f6ff;--gold:#F0C040;--gold-dk:#c89a10;--gold-lt:#fdf6dc;--ink:#0a1628;--ink2:#1a2d4a;--off:#f5f8fc;--border:#d4e0ee;--text:#0f1e35;--muted:#5e7a99;--green:#12a150;--orange:#f57c00;--purple:#7c3aed;--radius:16px;--shadow:0 4px 24px rgba(0,100,170,0.10);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Mulish',sans-serif;background:var(--off);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+header{width:100%;background:var(--ink);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,0.32);}
+.logo{font-family:'Unbounded',sans-serif;font-size:.9rem;font-weight:800;color:#fff;letter-spacing:-.01em;}
+.logo span{color:var(--gold);}
+.logo-sub{font-size:10px;color:rgba(255,255,255,0.35);font-family:'Mulish',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;}
+main{width:100%;max-width:900px;padding:2rem 1.25rem 5rem;flex:1;}
+.hero{background:var(--ink);border-radius:var(--radius);padding:3rem 2.5rem;color:#fff;position:relative;overflow:hidden;margin-bottom:2rem;}
+.hero::before{content:'';position:absolute;top:0;right:0;width:320px;height:320px;background:radial-gradient(circle at 80% 20%,rgba(0,174,239,0.18) 0%,transparent 60%);pointer-events:none;}
+.hero::after{content:'';position:absolute;bottom:-60px;right:80px;width:160px;height:160px;border:2px solid rgba(240,192,64,0.10);border-radius:50%;pointer-events:none;}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(240,192,64,0.12);border:1px solid rgba(240,192,64,0.3);color:var(--gold);font-family:'Unbounded',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:1.1rem;}
+.hero-title{font-family:'Unbounded',sans-serif;font-size:clamp(1.6rem,4.5vw,2.8rem);font-weight:900;line-height:1.08;margin-bottom:.75rem;letter-spacing:-.025em;}
+.hero-title em{color:var(--sky);font-style:normal;}
+.hero-sub{color:rgba(255,255,255,0.5);font-size:14px;line-height:1.75;max-width:500px;margin-bottom:2rem;}
+.hero-stats{display:flex;gap:2.5rem;flex-wrap:wrap;}
+.hs-val{font-family:'Unbounded',sans-serif;font-size:2.2rem;font-weight:800;color:var(--gold);line-height:1;}
+.hs-key{font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px;letter-spacing:.05em;text-transform:uppercase;}
+.sec-label{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-bottom:2rem;}
+.card{background:#fff;border:2px solid var(--border);border-radius:var(--radius);padding:1.5rem;text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:.75rem;transition:all .2s;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0;}
+.card.c-sky::before{background:var(--sky);}
+.card.c-gold::before{background:var(--gold);}
+.card.c-green::before{background:var(--green);}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,100,170,0.16);}
+.card.c-sky:hover{border-color:var(--sky);}
+.card.c-gold:hover{border-color:var(--gold);}
+.card.c-green:hover{border-color:var(--green);}
+.card.disabled{opacity:.45;pointer-events:none;cursor:default;}
+.card-icon{font-size:2rem;line-height:1;}
+.card-badge{font-family:'Unbounded',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;display:inline-flex;align-items:center;width:fit-content;}
+.badge-sky{background:var(--sky-lt);color:var(--sky-dk);}
+.badge-gold{background:var(--gold-lt);color:var(--gold-dk);}
+.badge-green{background:#e8f8ef;color:#0a6630;}
+.badge-muted{background:var(--off);color:var(--muted);}
+.card-title{font-family:'Unbounded',sans-serif;font-size:1rem;font-weight:800;line-height:1.2;letter-spacing:-.01em;}
+.card-desc{font-size:13px;color:var(--muted);line-height:1.6;font-weight:600;flex:1;}
+.card-meta{display:flex;align-items:center;justify-content:space-between;margin-top:.25rem;}
+.card-detail{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.04em;}
+.card-arrow{font-size:1.1rem;color:var(--border);transition:color .2s,transform .2s;}
+.card:hover .card-arrow{color:var(--sky);transform:translateX(3px);}
+.card.c-gold:hover .card-arrow{color:var(--gold-dk);}
+.card.c-green:hover .card-arrow{color:var(--green);}
+.soon-label{display:inline-flex;align-items:center;gap:5px;font-family:'Unbounded',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(94,122,153,0.1);color:var(--muted);padding:3px 10px;border-radius:100px;}
+.divider{height:3px;max-width:80px;background:linear-gradient(90deg,var(--sky) 50%,var(--gold) 50%);border-radius:2px;margin:2rem 0 1.5rem;}
+footer{width:100%;background:var(--ink);text-align:center;padding:1.1rem;font-size:12px;color:rgba(255,255,255,0.28);font-weight:600;}
+footer code{color:rgba(255,255,255,0.45);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.hero{animation:fadeUp .4s ease;}
+.cards .card:nth-child(1){animation:fadeUp .35s ease .05s both;}
+.cards .card:nth-child(2){animation:fadeUp .35s ease .10s both;}
+.cards .card:nth-child(3){animation:fadeUp .35s ease .15s both;}
+.cards .card:nth-child(4){animation:fadeUp .35s ease .20s both;}
+.cards .card:nth-child(5){animation:fadeUp .35s ease .25s both;}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="logo">ПДД <span>РК</span></div>
+    <div class="logo-sub">Тренажёр дорожных знаков</div>
+  </div>
+</header>
+<main>
+  <div class="hero">
+    <div class="hero-tag">🚦 Учебный центр</div>
+    <div class="hero-title">Знаки ПДД<br><em>Казахстана</em></div>
+    <p class="hero-sub">Выбери формат тренировки. Каждый режим прокачивает разные навыки — от узнавания знаков до понимания их категорий.</p>
+    <div class="hero-stats">
+      <div><div class="hs-val">3</div><div class="hs-key">режима</div></div>
+      <div><div class="hs-val">45</div><div class="hs-key">знаков</div></div>
+      <div><div class="hs-val">РУ/ҚЗ</div><div class="hs-key">языки</div></div>
+    </div>
+  </div>
+  <div class="sec-label">Доступные режимы</div>
+  <div class="cards">
+    <a class="card c-sky" href="pdd-quiz.html">
+      <div class="card-icon">✅</div>
+      <div class="card-badge badge-sky">Быстрый тест</div>
+      <div class="card-title">Верно или Неверно?</div>
+      <div class="card-desc">Показывается знак и описание. Определи — совпадают ли они. Тренирует узнавание знаков.</div>
+      <div class="card-meta"><span class="card-detail">15 вопросов · без таймера</span><span class="card-arrow">→</span></div>
+    </a>
+    <a class="card c-gold" href="pdd-sort.html">
+      <div class="card-icon">🗂️</div>
+      <div class="card-badge badge-gold">Категории</div>
+      <div class="card-title">Раскидай по категориям</div>
+      <div class="card-desc">Нажми на нужную категорию для каждого знака: предупреждающие, запрещающие или приоритет.</div>
+      <div class="card-meta"><span class="card-detail">15 знаков · 3 категории</span><span class="card-arrow">→</span></div>
+    </a>
+    <a class="card c-green" href="pdd-odd.html">
+      <div class="card-icon">🔍</div>
+      <div class="card-badge badge-green">Логика</div>
+      <div class="card-title">Найди лишний знак</div>
+      <div class="card-desc">4 знака — три одной темы, один чужой. Найди лишний за 30 секунд. Чем быстрее — тем больше очков.</div>
+      <div class="card-meta"><span class="card-detail">10–30 вопросов · 30 сек</span><span class="card-arrow">→</span></div>
+    </a>
+    <div class="card disabled">
+      <div class="card-icon">🎯</div>
+      <div class="soon-label">⏳ Скоро</div>
+      <div class="card-title">Угадай знак</div>
+      <div class="card-desc">Четыре варианта названия — одно изображение. Классический формат теста на знание ПДД.</div>
+      <div class="card-meta"><span class="card-detail">в разработке</span><span class="card-arrow">→</span></div>
+    </div>
+    <div class="card disabled">
+      <div class="card-icon">⚡</div>
+      <div class="soon-label">⏳ Скоро</div>
+      <div class="card-title">Флеш-карточки</div>
+      <div class="card-desc">Листай знаки как в Duolingo — отмечай «знаю / не знаю» и повторяй только слабые места.</div>
+      <div class="card-meta"><span class="card-detail">в разработке</span><span class="card-arrow">→</span></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="sec-label">Как пользоваться</div>
+  <p style="font-size:14px;color:var(--muted);line-height:1.8;font-weight:600;max-width:560px;">
+    Все тесты работают локально — картинки берутся из папки <code style="background:var(--sky-lt);color:var(--sky-dk);padding:2px 6px;border-radius:5px;font-size:12px;">signs/</code> рядом с этим файлом. Запусти сервер командой <code style="background:var(--sky-lt);color:var(--sky-dk);padding:2px 6px;border-radius:5px;font-size:12px;">npx serve .</code> и открой <code style="background:var(--sky-lt);color:var(--sky-dk);padding:2px 6px;border-radius:5px;font-size:12px;">localhost:3000</code> в браузере.
+  </p>
+</main>
+<footer>ПДД КЗ · <code>Тренажёр знаков</code> · 2025</footer>
+</body>
+</html>

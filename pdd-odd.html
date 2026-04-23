@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ПДД РК — Найди лишнее</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Mulish:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky:    #00AEEF;
+  --sky-dk: #0090c8;
+  --sky-lt: #e0f6ff;
+  --gold:   #F0C040;
+  --gold-dk:#c89a10;
+  --gold-lt:#fdf6dc;
+  --ink:    #0a1628;
+  --ink2:   #1a2d4a;
+  --off:    #f5f8fc;
+  --border: #d4e0ee;
+  --text:   #0f1e35;
+  --muted:  #5e7a99;
+  --white:  #ffffff;
+  --radius: 14px;
+  --shadow: 0 4px 20px rgba(0,100,170,0.10);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Mulish', sans-serif;
+  background: var(--off);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── HEADER ── */
+header {
+  width: 100%;
+  background: var(--ink);
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 62px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.30);
+}
+.logo {
+  font-family: 'Unbounded', sans-serif;
+  font-size: .85rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+.logo span { color: var(--gold); }
+.hdr-right { display: flex; align-items: center; gap: 10px; }
+.hdr-score { font-family:'Unbounded',sans-serif; font-size:.8rem; color:rgba(255,255,255,0.55); display:none; }
+.hdr-score span { color:var(--gold); font-weight:700; }
+.lang-btn {
+  font-family:'Unbounded',sans-serif; font-size:11px; font-weight:700;
+  padding: 5px 14px;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.22);
+  border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.2s;
+  letter-spacing: .04em;
+}
+.lang-btn .lang-ru { color: #fff; }
+.lang-btn .lang-kz { color: var(--gold); }
+.lang-btn:hover { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.45); }
+#btn-stop {
+  display: none;
+  font-size: 11px; font-weight: 700; font-family:'Unbounded',sans-serif;
+  padding: 5px 13px;
+  background: transparent;
+  color: rgba(255,255,255,0.65);
+  border: 1.5px solid rgba(255,255,255,0.18);
+  border-radius: 8px; cursor: pointer; transition: all 0.2s;
+  letter-spacing:.03em;
+}
+#btn-stop:hover { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.45); color:#fff; }
+
+main { width:100%; max-width:880px; padding:2rem 1.25rem 4rem; flex:1; }
+.screen { display:none; animation: fadeUp .35s ease; }
+.screen.active { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── HOME ── */
+.home-hero {
+  background: var(--ink);
+  border-radius: var(--radius);
+  padding: 2.75rem 2.5rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.75rem;
+}
+.home-hero::before {
+  content:'';
+  position:absolute; top:0; right:0;
+  width:280px; height:280px;
+  background: radial-gradient(circle at 75% 25%, rgba(0,174,239,0.15) 0%, transparent 65%);
+  pointer-events:none;
+}
+.home-hero::after {
+  content:'';
+  position:absolute; bottom:-40px; right:50px;
+  width:130px; height:130px;
+  border:2px solid rgba(240,192,64,0.12);
+  border-radius:50%;
+  pointer-events:none;
+}
+.hero-tag {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(240,192,64,0.12);
+  border: 1px solid rgba(240,192,64,0.3);
+  color:var(--gold);
+  font-family:'Unbounded',sans-serif; font-size:10px; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase;
+  padding:5px 12px; border-radius:100px; margin-bottom:1.1rem;
+}
+.hero-title {
+  font-family:'Unbounded',sans-serif;
+  font-size:clamp(1.6rem,4.5vw,2.7rem);
+  font-weight:900; line-height:1.1; margin-bottom:.75rem;
+  letter-spacing:-.02em;
+}
+.hero-title em { color:var(--sky); font-style:normal; }
+.hero-sub {
+  color:rgba(255,255,255,0.55); font-size:14px; line-height:1.7;
+  max-width:480px; margin-bottom:2.25rem;
+}
+.hero-stats { display:flex; gap:2.5rem; flex-wrap:wrap; }
+.hs-val { font-family:'Unbounded',sans-serif; font-size:2rem; font-weight:700; color:var(--gold); line-height:1; }
+.hs-key { font-size:11px; color:rgba(255,255,255,0.38); margin-top:4px; letter-spacing:.04em; }
+
+.home-btns { display:flex; flex-direction:column; gap:.75rem; max-width:310px; margin-bottom:2.5rem; }
+.count-picker { margin:-1rem 0 2rem; max-width:520px; }
+.count-label {
+  font-family:'Unbounded',sans-serif; font-size:11px; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:.8rem;
+}
+.count-row { display:flex; gap:.75rem; flex-wrap:wrap; }
+.count-btn {
+  min-width:74px; padding:.8rem 1rem; border-radius:12px; border:1.5px solid var(--border);
+  background:#fff; color:var(--ink2); cursor:pointer; font-family:'Unbounded',sans-serif;
+  font-size:13px; font-weight:700; transition:border-color .18s, transform .15s, box-shadow .18s, background .18s;
+  box-shadow:var(--shadow);
+}
+.count-btn:hover { border-color:var(--sky); transform:translateY(-2px); }
+.count-btn.active {
+  background:var(--ink); color:#fff; border-color:var(--ink);
+  box-shadow:0 8px 22px rgba(10,22,40,0.22);
+}
+.btn-primary {
+  font-family:'Unbounded',sans-serif; font-size:13px; font-weight:700; letter-spacing:.02em;
+  padding:1rem 2rem; background:var(--gold); color:var(--ink);
+  border:none; border-radius:var(--radius); cursor:pointer; text-align:center;
+  transition:background .18s,transform .15s,box-shadow .18s;
+  box-shadow:0 4px 16px rgba(240,192,64,0.35);
+}
+.btn-primary:hover { background:#f5cc55; transform:translateY(-2px); box-shadow:0 6px 22px rgba(240,192,64,0.45); }
+.btn-outline {
+  font-family:'Mulish',sans-serif; font-size:14px; font-weight:700;
+  padding:.85rem 2rem; background:#fff; color:var(--ink2);
+  border:1.5px solid var(--border); border-radius:var(--radius);
+  cursor:pointer; text-align:center; transition:border-color .18s, box-shadow .18s;
+}
+.btn-outline:hover { border-color:var(--sky); box-shadow:0 2px 10px rgba(0,174,239,0.12); }
+.sec-label {
+  font-family:'Unbounded',sans-serif; font-size:11px; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:.85rem;
+}
+.rec-mini {
+  display:flex; align-items:center; padding:.75rem 1.1rem;
+  background:#fff; border:1px solid var(--border); border-radius:10px;
+  margin-bottom:.4rem; gap:12px;
+  transition: box-shadow .15s;
+}
+.rec-mini:hover { box-shadow: var(--shadow); }
+.rec-mini-rank { font-family:'Unbounded',sans-serif; font-size:12px; font-weight:700; color:var(--muted); min-width:22px; }
+.rec-mini-rank.g { color:var(--gold-dk); }
+.rec-mini-name { flex:1; font-size:14px; font-weight:600; }
+.rec-mini-score { font-family:'Unbounded',sans-serif; font-weight:700; font-size:14px; color:var(--sky-dk); }
+.rec-mini-date { font-size:11px; color:var(--muted); }
+.no-recs { text-align:center; color:var(--muted); font-size:14px; padding:1.5rem; }
+
+/* ── QUIZ ── */
+.quiz-top {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:.85rem; flex-wrap:wrap; gap:8px;
+}
+.round-badge {
+  font-family:'Unbounded',sans-serif; font-size:12px; font-weight:600;
+  color:var(--sky-dk); background:var(--sky-lt); padding:5px 14px; border-radius:100px;
+  border: 1px solid rgba(0,174,239,0.2);
+}
+.score-badge { font-family:'Unbounded',sans-serif; font-size:14px; font-weight:700; color:var(--gold-dk); }
+.prog-track {
+  width:100%; height:5px; background:var(--border); border-radius:6px;
+  margin-bottom:1.75rem; overflow:hidden;
+}
+.prog-fill { height:100%; background: linear-gradient(90deg, var(--sky), var(--gold)); border-radius:6px; transition:width .4s ease; }
+.timer-wrap { display:flex; justify-content:center; margin-bottom:1.75rem; }
+.t-ring { position:relative; width:78px; height:78px; }
+.t-ring svg { transform:rotate(-90deg); }
+.t-ring .bg { fill:none; stroke:var(--border); stroke-width:5; }
+.t-ring .prog {
+  fill:none; stroke:var(--sky); stroke-width:5; stroke-linecap:round;
+  stroke-dasharray:207; stroke-dashoffset:0;
+  transition:stroke-dashoffset 1s linear, stroke .3s;
+}
+.t-num {
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:'Unbounded',sans-serif; font-size:1.4rem; font-weight:700; color:var(--ink);
+}
+.q-text {
+  text-align:center; font-size:17.5px; color: black; line-height:1.7;
+  max-width:560px; margin:0 auto 1.75rem; font-weight:600;
+}
+.signs-grid {
+  display:grid; grid-template-columns:repeat(2,1fr); gap:.875rem;
+  max-width:620px; margin:0 auto 1.5rem;
+}
+@media(min-width:520px) { .signs-grid { grid-template-columns:repeat(4,1fr); } }
+.sign-card {
+  background:#fff; border:2px solid var(--border); border-radius:var(--radius);
+  padding:1.1rem .5rem .875rem; text-align:center; cursor:pointer;
+  transition:border-color .15s, transform .15s, box-shadow .15s;
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  user-select:none; box-shadow:var(--shadow);
+}
+.sign-card:hover { border-color:var(--sky); transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,174,239,0.16); }
+.sign-card.disabled { pointer-events:none; }
+.sign-card.sel-ok  { border-color:#12a150; background:#e8f8ef; }
+.sign-card.sel-err { border-color:#e53935; background:#ffeaea; animation:shake .4s; }
+.sign-card.rev-ok  { border-color:#12a150; background:#e8f8ef; }
+.sign-card.rev-dim { opacity:.35; }
+@keyframes shake {
+  0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}
+  60%{transform:translateX(-5px)}80%{transform:translateX(5px)}
+}
+.sign-img { width:78px; height:78px; object-fit:contain; }
+.sign-code { font-family:'Unbounded',sans-serif; font-size:11px; color:var(--sky-dk); font-weight:700; }
+.sign-name { font-size:11px; color:var(--muted); line-height:1.4; font-weight:600; }
+.feedback {
+  max-width:620px; margin:0 auto 1rem; padding:.95rem 1.2rem;
+  border-radius:var(--radius); font-size:14px; line-height:1.65; font-weight:600;
+  display:none; border-left:4px solid transparent;
+}
+.feedback.show { display:block; animation:fadeUp .2s; }
+.feedback.ok  { background:#e8f8ef; border-color:#12a150; color:#0a6630; }
+.feedback.err { background:#ffeaea; border-color:#e53935; color:#8b0000; }
+.feedback.tim { background:#fff8e1; border-color:var(--gold-dk); color:#6d4c00; }
+.btn-next-wrap { text-align:center; }
+.btn-next {
+  display:none; font-family:'Unbounded',sans-serif; font-size:13px; font-weight:700;
+  letter-spacing:.02em; padding:.85rem 2.25rem; background:var(--ink); color:#fff;
+  border:none; border-radius:var(--radius); cursor:pointer;
+  transition:background .18s, transform .15s;
+  box-shadow:0 4px 16px rgba(10,22,40,0.25);
+}
+.btn-next.show { display:block; animation:fadeUp .2s; }
+.btn-next:hover { background:var(--ink2); transform:translateY(-1px); }
+
+/* ── RESULTS ── */
+.res-hero {
+  background: var(--ink);
+  border-radius: var(--radius); padding:2.75rem 2rem;
+  color:#fff; text-align:center; margin-bottom:1.5rem;
+  position:relative; overflow:hidden;
+}
+.res-hero::before {
+  content:''; position:absolute; top:-20px; right:-10px;
+  width:180px; height:180px;
+  border-radius:50%;
+  background: radial-gradient(circle, rgba(240,192,64,0.08) 0%, transparent 70%);
+  pointer-events:none;
+}
+.res-verdict { font-family:'Unbounded',sans-serif; font-size:1.4rem; font-weight:800; margin-bottom:.4rem; letter-spacing:-.02em; }
+.res-hint    { color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:1.75rem; }
+.res-pts     { font-family:'Unbounded',sans-serif; font-size:3.5rem; font-weight:900; line-height:1; color:var(--gold); }
+.res-pts-lbl { font-size:11px; color:rgba(255,255,255,0.38); margin-top:6px; letter-spacing:.1em; text-transform:uppercase; }
+.res-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:.875rem; margin-bottom:1.5rem;
+}
+.res-card {
+  background:#fff; border:1px solid var(--border); border-radius:var(--radius);
+  padding:1.1rem; text-align:center; box-shadow:var(--shadow);
+}
+.res-val { font-family:'Unbounded',sans-serif; font-size:1.75rem; font-weight:800; line-height:1; margin-bottom:5px; }
+.res-val.g { color:#12a150; }
+.res-val.r { color:#e53935; }
+.res-val.b { color:var(--sky-dk); }
+.res-key { font-size:11px; color:var(--muted); font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
+.save-block {
+  background:#fff; border:1px solid var(--border); border-radius:var(--radius);
+  padding:1.35rem; margin-bottom:1.5rem; box-shadow:var(--shadow);
+}
+.save-block label { display:block; font-size:12px; color:var(--muted); margin-bottom:8px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+.save-row { display:flex; gap:8px; }
+.save-input {
+  flex:1; font-family:'Mulish',sans-serif; font-size:14px; font-weight:600;
+  padding:.75rem 1rem; border:1.5px solid var(--border); border-radius:10px;
+  outline:none; color:var(--text); background:var(--off); transition:border-color .2s;
+}
+.save-input:focus { border-color:var(--sky); background:#fff; }
+.save-input::placeholder { color:#b0c0d4; }
+.btn-save {
+  font-family:'Unbounded',sans-serif; font-size:12px; font-weight:700;
+  padding:.75rem 1.25rem; background:var(--sky); color:#fff;
+  border:none; border-radius:10px; cursor:pointer; transition:background .18s; white-space:nowrap;
+  letter-spacing:.02em;
+}
+.btn-save:hover { background:var(--sky-dk); }
+.save-ok { font-size:13px; color:#12a150; margin-top:8px; font-weight:700; display:none; }
+.save-ok.show { display:block; }
+.res-btns { display:flex; flex-direction:column; gap:.75rem; max-width:300px; }
+
+/* ── LEADERBOARD ── */
+.lb-wrap { max-width:700px; }
+.lb-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; }
+.page-title { font-family:'Unbounded',sans-serif; font-size:1.25rem; font-weight:800; color:var(--ink); letter-spacing:-.02em; }
+.btn-clear { font-size:13px; color:var(--muted); background:none; border:none; cursor:pointer; font-family:'Mulish',sans-serif; font-weight:700; }
+.btn-clear:hover { color:#e53935; }
+table.lb {
+  width:100%; border-collapse:collapse;
+  background:#fff; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);
+}
+table.lb thead tr { background:var(--ink); color:rgba(255,255,255,0.5); }
+table.lb th {
+  padding:.8rem 1rem; text-align:left;
+  font-family:'Unbounded',sans-serif; font-size:10px; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase;
+}
+table.lb td { padding:.85rem 1rem; font-size:14px; border-bottom:1px solid var(--border); font-weight:600; }
+table.lb tbody tr:last-child td { border-bottom:none; }
+table.lb tbody tr:hover { background:var(--sky-lt); }
+.rk {
+  display:inline-flex; width:26px; height:26px; border-radius:50%;
+  align-items:center; justify-content:center;
+  font-family:'Unbounded',sans-serif; font-size:11px; font-weight:700;
+  background:var(--off); color:var(--muted);
+}
+.rk.r1 { background:rgba(240,192,64,0.2); color:var(--gold-dk); }
+.rk.r2 { background:rgba(200,210,225,0.4); color:#5e7a99; }
+.rk.r3 { background:rgba(180,140,100,0.15); color:#8b6030; }
+.pct-row { display:flex; align-items:center; gap:8px; }
+.pct-bar { height:5px; background: linear-gradient(90deg, var(--sky), var(--gold)); border-radius:4px; min-width:4px; }
+.pct-num { font-family:'Unbounded',sans-serif; font-size:12px; font-weight:700; color:var(--sky-dk); min-width:38px; }
+.empty-lb { text-align:center; padding:3rem; color:var(--muted); font-size:15px; font-weight:600; }
+.divider {
+  height:3px; max-width:80px;
+  background: linear-gradient(90deg, var(--sky) 50%, var(--gold) 50%);
+  border-radius:2px; margin:1.75rem 0;
+}
+footer {
+  width:100%; background:var(--ink); text-align:center;
+  padding:1rem; font-size:12px; color:rgba(255,255,255,0.28); font-weight:600;
+}
+footer code { color:rgba(255,255,255,0.5); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo" id="logo-text">ПДД <span>РК</span> — Найди лишнее</div>
+  <div class="hdr-right">
+    <div class="hdr-score" id="hdr-score">
+      <span id="hdr-score-label">Счёт:</span> <span id="hdr-pts">0</span>
+    </div>
+    <button id="btn-stop" onclick="stopEarly()">Завершить</button>
+    <button class="lang-btn" onclick="toggleLang()">
+      <span class="lang-ru" id="lang-ru-lbl">RU</span>
+      <span style="color:rgba(255,255,255,0.3)">|</span>
+      <span class="lang-kz" id="lang-kz-lbl">ҚЗ</span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <div class="screen active" id="screen-home">
+    <div class="home-hero">
+      <div class="hero-tag" id="hero-tag-text">Тест ПДД РК</div>
+      <h1 class="hero-title" id="hero-title-text">Найди <em>лишний</em> знак</h1>
+      <p class="hero-sub" id="hero-sub-text">В каждом раунде — 4 знака. Три из одной подкатегории, один — лишний. 30 секунд на ответ. Можно завершить тест досрочно — результат будет засчитан.</p>
+      <div class="hero-stats">
+        <div><div class="hs-val" id="home-round-count">10</div><div class="hs-key" id="hs-rounds">вопросов</div></div>
+        <div><div class="hs-val">30</div><div class="hs-key" id="hs-secs">секунд</div></div>
+        <div><div class="hs-val" id="home-played">0</div><div class="hs-key" id="hs-tries">попыток</div></div>
+      </div>
+    </div>
+    <div class="home-btns">
+      <button class="btn-primary" id="btn-start" onclick="startGame()">Начать тест</button>
+      <button class="btn-outline" id="btn-lb" onclick="showScreen('screen-lb')">Таблица рекордов</button>
+    </div>
+    <div class="count-picker">
+      <div class="count-label" id="lbl-round-count">Сколько вопросов в тесте</div>
+      <div class="count-row">
+        <button class="count-btn" id="count-10" onclick="selectRoundCount(10)">10</button>
+        <button class="count-btn" id="count-15" onclick="selectRoundCount(15)">15</button>
+        <button class="count-btn" id="count-20" onclick="selectRoundCount(20)">20</button>
+        <button class="count-btn" id="count-30" onclick="selectRoundCount(30)">30</button>
+      </div>
+    </div>
+    <div class="sec-label" id="lbl-recent">Последние результаты</div>
+    <div id="home-recs"></div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="screen-quiz">
+    <div class="quiz-top">
+      <div class="round-badge"><span id="lbl-round-word">Раунд</span> <span id="q-num">1</span> / <span id="q-tot">10</span></div>
+      <div class="score-badge"><span id="q-score">0</span> <span id="lbl-pts-short">pts</span></div>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="q-prog" style="width:0%"></div></div>
+    <div class="timer-wrap">
+      <div class="t-ring">
+        <svg width="78" height="78" viewBox="0 0 78 78">
+          <circle class="bg" cx="39" cy="39" r="33"/>
+          <circle class="prog" id="t-circle" cx="39" cy="39" r="33"/>
+        </svg>
+        <div class="t-num" id="t-num">30</div>
+      </div>
+    </div>
+    <p class="q-text" id="q-text"></p>
+    <div class="signs-grid" id="signs-grid"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="btn-next-wrap">
+      <button class="btn-next" id="btn-next" onclick="nextRound()">Следующий раунд</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="screen" id="screen-results">
+    <div class="res-hero">
+      <div class="res-verdict" id="res-verdict"></div>
+      <div class="res-hint" id="res-hint"></div>
+      <div class="res-pts" id="res-pts">0</div>
+      <div class="res-pts-lbl" id="lbl-pts-res">очков</div>
+    </div>
+    <div class="res-grid">
+      <div class="res-card"><div class="res-val g" id="res-correct">0</div><div class="res-key" id="lbl-correct">Верно</div></div>
+      <div class="res-card"><div class="res-val r" id="res-wrong">0</div><div class="res-key" id="lbl-wrong">Ошибок</div></div>
+      <div class="res-card"><div class="res-val b" id="res-pct">0%</div><div class="res-key" id="lbl-acc">Точность</div></div>
+    </div>
+    <div class="save-block">
+      <label id="lbl-save">Сохранить в таблицу рекордов:</label>
+      <div class="save-row">
+        <input class="save-input" id="save-name" type="text" maxlength="24" placeholder="Ваше имя...">
+        <button class="btn-save" id="btn-save-rec" onclick="saveRecord()">Сохранить</button>
+      </div>
+      <div class="save-ok" id="save-ok">✓ Результат сохранён!</div>
+    </div>
+    <div class="res-btns">
+      <button class="btn-primary" id="btn-play-again" onclick="startGame()">Играть снова</button>
+      <button class="btn-outline" id="btn-lb2" onclick="showScreen('screen-lb')">Таблица рекордов</button>
+      <button class="btn-outline" id="btn-home2" onclick="showScreen('screen-home')">На главную</button>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD -->
+  <div class="screen" id="screen-lb">
+    <div class="lb-wrap">
+      <div class="lb-header">
+        <div class="page-title" id="lbl-lb-title">Таблица рекордов</div>
+        <button class="btn-clear" id="btn-clear" onclick="clearRecs()">Очистить</button>
+      </div>
+      <div id="lb-body"></div>
+      <div class="divider"></div>
+      <button class="btn-outline" style="max-width:200px" id="btn-home3" onclick="showScreen('screen-home')">На главную</button>
+    </div>
+  </div>
+
+</main>
+<footer>Знаки из папки <code>signs/</code> &nbsp;·&nbsp; GitHub Pages &nbsp;·&nbsp; ПДД РК</footer>
+
+<script>
+const T = {
+  ru: {
+    logo: 'ПДД <span style="color:var(--gold)">РК</span> — Найди лишнее',
+    heroTag: 'Тест ПДД РК',
+    heroTitle: 'Найди <em style="color:var(--sky);font-style:normal">лишний</em> знак',
+    heroSub: 'Все картинки в тесте вручную сверены по фактическому изображению. В каждом раунде 4 знака: три относятся к одной теме, один — лишний. Выбери длину теста и проверь себя.',
+    hsRounds: 'вопросов', hsSecs: 'секунд', hsTries: 'попыток',
+    roundCountLabel: 'Сколько вопросов в тесте',
+    btnStart: 'Начать тест', btnLb: 'Таблица рекордов',
+    lblRecent: 'Последние результаты',
+    lblRoundWord: 'Раунд', lblPtsShort: 'pts',
+    btnStop: 'Завершить',
+    scoreLabel: 'Счёт:',
+    lblPtsRes: 'очков',
+    lblCorrect: 'Верно', lblWrong: 'Ошибок', lblAcc: 'Точность',
+    lblSave: 'Сохранить в таблицу рекордов:',
+    savePlaceholder: 'Ваше имя...',
+    btnSaveRec: 'Сохранить',
+    saveOk: '✓ Результат сохранён!',
+    btnPlayAgain: 'Играть снова', btnHome: 'На главную',
+    lbTitle: 'Таблица рекордов', btnClear: 'Очистить',
+    lbEmpty: 'Рекордов пока нет. Пройдите тест первым!',
+    noRecs: 'Рекордов пока нет',
+    lbCols: ['#', 'Имя', 'Счёт', 'Верно / пройдено', 'Точность', 'Дата'],
+    btnNextRound: 'Следующий раунд', btnResults: 'Результаты',
+    verdict100: 'Отличный результат!', hint100: 'Все знаки распознаны без ошибок',
+    verdict70: 'Хорошо!', hint70: 'База уверенная, но ещё есть что повторить',
+    verdictLow: 'Нужно повторить', hintLow: 'Лучше ещё раз пройти категории предупреждающих знаков',
+    verdictEarly: 'Тест завершён досрочно', hintEarly: (p, t) => `Пройдено ${p} из ${t} вопросов`,
+    fbOk:  (exp) => '✓ Верно! ' + exp,
+    fbErr: (exp) => '✗ Ошибка. ' + exp,
+    fbTim: (exp) => '⏱ Время вышло! ' + exp,
+    confirmStop:  (p, t) => `Завершить тест?\nПройдено ${p} из ${t} вопросов. Результат будет засчитан.`,
+    confirmClear: 'Очистить все рекорды?',
+  },
+  kz: {
+    logo: 'ПДҚ <span style="color:var(--gold)">РК</span> — Артығын тап',
+    heroTag: 'ПДҚ тесті',
+    heroTitle: 'Артық <em style="color:var(--sky);font-style:normal">белгіні</em> тап',
+    heroSub: 'Тесттегі барлық суреттер нақты бейнесі бойынша қолмен тексерілді. Əр раундта 4 белгі бар: үшеуі бір тақырыпқа жатады, біреуі — артық. Тест ұзақтығын таңдап, өзіңді тексер.',
+    hsRounds: 'сұрақ', hsSecs: 'секунд', hsTries: 'əрекет',
+    roundCountLabel: 'Тестте неше сұрақ болсын',
+    btnStart: 'Тестті бастау', btnLb: 'Рекордтар кестесі',
+    lblRecent: 'Соңғы нəтижелер',
+    lblRoundWord: 'Раунд', lblPtsShort: 'ұпай',
+    btnStop: 'Аяқтау',
+    scoreLabel: 'Ұпай:',
+    lblPtsRes: 'ұпай',
+    lblCorrect: 'Дұрыс', lblWrong: 'Қате', lblAcc: 'Дəлдік',
+    lblSave: 'Рекордтар кестесіне сақтау:',
+    savePlaceholder: 'Атыңызды енгізіңіз...',
+    btnSaveRec: 'Сақтау',
+    saveOk: '✓ Нəтиже сақталды!',
+    btnPlayAgain: 'Қайта ойнау', btnHome: 'Басты бет',
+    lbTitle: 'Рекордтар кестесі', btnClear: 'Тазалау',
+    lbEmpty: 'Əлі рекорд жоқ. Бірінші болып өтіңіз!',
+    noRecs: 'Əлі рекорд жоқ',
+    lbCols: ['#', 'Аты', 'Ұпай', 'Дұрыс / өтілді', 'Дəлдік', 'Күні'],
+    btnNextRound: 'Келесі раунд', btnResults: 'Нəтижелер',
+    verdict100: 'Тамаша нəтиже!', hint100: 'Барлық белгілер қателіксіз танылды',
+    verdict70: 'Жақсы!', hint70: 'Негіз жақсы, бірақ тағы қайталау керек',
+    verdictLow: 'Қайталау керек', hintLow: 'Ескертуші белгілер санаттарын тағы бір қарап шыққан дұрыс',
+    verdictEarly: 'Тест ерте аяқталды', hintEarly: (p, t) => `${p} / ${t} сұрақ өтілді`,
+    fbOk:  (exp) => '✓ Дұрыс! ' + exp,
+    fbErr: (exp) => '✗ Қате. ' + exp,
+    fbTim: (exp) => '⏱ Уақыт бітті! ' + exp,
+    confirmStop:  (p, t) => `Тестті аяқтау керек пе?\n${p} / ${t} сұрақ өтілді. Нəтиже есептеледі.`,
+    confirmClear: 'Барлық рекордтарды өшіру керек пе?',
+  }
+};
+
+const ROUND_TIME = 30;
+const ROUND_COUNT_OPTIONS = [10, 15, 20, 30];
+const DEFAULT_ROUND_COUNT = 10;
+
+const SIGN_BANK = {
+  '1.1':   { img: '1.1.png',   name: { ru: 'Железнодорожный переезд со шлагбаумом', kz: 'Шлагбаумы бар теміржол өткелі' } },
+  '1.2':   { img: '1.2.png',   name: { ru: 'Железнодорожный переезд без шлагбаума', kz: 'Шлагбаумсыз теміржол өткелі' } },
+  '1.3.1': { img: '1.3.1.png', name: { ru: 'Однопутная железная дорога',            kz: 'Бір жолды теміржол' } },
+  '1.6':   { img: '1.6.png',   name: { ru: 'Пересечение равнозначных дорог',        kz: 'Тең мәнді жолдардың қиылысы' } },
+  '1.7':   { img: '1.7.png',   name: { ru: 'Пересечение с круговым движением',      kz: 'Айналма қозғалыспен қиылысу' } },
+  '1.8':   { img: '1.8.png',   name: { ru: 'Светофорное регулирование',             kz: 'Светофорлық реттеу' } },
+  '1.11.1':{ img: '1.11.1.png',name: { ru: 'Опасный поворот направо',               kz: 'Оңға қауіпті бұрылыс' } },
+  '1.12.1':{ img: '1.12.1.png',name: { ru: 'Опасные повороты',                      kz: 'Қауіпті бұрылыстар' } },
+  '1.13':  { img: '1.13.png',  name: { ru: 'Крутой спуск',                          kz: 'Тік түсу' } },
+  '1.14':  { img: '1.14.png',  name: { ru: 'Крутой подъём',                         kz: 'Тік көтерілу' } },
+  '1.15':  { img: '1.15.png',  name: { ru: 'Скользкая дорога',                      kz: 'Тайғақ жол' } },
+  '1.16':  { img: '1.16.png',  name: { ru: 'Неровная дорога',                       kz: 'Тегіс емес жол' } },
+  '1.17':  { img: '1.17.png',  name: { ru: 'Выброс гравия',                         kz: 'Қиыршық тас шашырауы' } },
+  '1.18':  { img: '1.18.png',  name: { ru: 'Опасная обочина',                       kz: 'Қауіпті жол жиегі' } },
+  '1.19':  { img: '1.19.png',  name: { ru: 'Двустороннее движение',                 kz: 'Екіжақты қозғалыс' } },
+  '1.20':  { img: '1.20.png',  name: { ru: 'Пешеходный переход',                    kz: 'Жаяу жүргіншілер өткелі' } },
+  '1.22':  { img: '1.22.png',  name: { ru: 'Пересечение с велосипедной дорожкой',   kz: 'Велосипед жолымен қиылысу' } },
+  '1.23':  { img: '1.23.png',  name: { ru: 'Дорожные работы',                       kz: 'Жол жұмыстары' } },
+  '1.24':  { img: '1.24.png',  name: { ru: 'Перегон скота',                         kz: 'Мал айдау' } },
+  '1.25':  { img: '1.25.png',  name: { ru: 'Дикие животные',                        kz: 'Жабайы жануарлар' } },
+  '1.26':  { img: '1.26.png',  name: { ru: 'Падение камней',                        kz: 'Тас құлауы' } },
+  '1.27':  { img: '1.27.png',  name: { ru: 'Боковой ветер',                         kz: 'Бүйір жел' } },
+  '1.30':  { img: '1.30.png',  name: { ru: 'Прочие опасности',                      kz: 'Өзге қауіптер' } },
+};
+
+const TOPICS = {
+  rail:        { ru: 'железнодорожная инфраструктура',      kz: 'теміржол инфрақұрылымы' },
+  traffic:     { ru: 'пересечения и организация движения',  kz: 'қиылыс пен қозғалысты ұйымдастыру' },
+  geometry:    { ru: 'геометрия и профиль дороги',          kz: 'жол геометриясы мен бедері' },
+  surface:     { ru: 'состояние покрытия и дорожные условия', kz: 'жабын күйі мен жол жағдайы' },
+  pedestrians: { ru: 'пешеходы и животные на дороге',       kz: 'жолдағы жаяу жүргіншілер мен жануарлар' },
+  environment: { ru: 'внешние условия и обзорность',        kz: 'сыртқы жағдайлар мен көріну' },
+  danger:      { ru: 'локальные опасности на дороге',       kz: 'жолдағы жергілікті қауіптер' },
+};
+
+function sign(code) {
+  const info = SIGN_BANK[code];
+  return { code, name: info.name, img: info.img };
+}
+
+function makeRound(sameCodes, oddCode, sameTopicKey, oddTopicKey) {
+  const odd = sign(oddCode);
+  return {
+    ru: {
+      q:   `Три знака относятся к теме «${TOPICS[sameTopicKey].ru}», один — к теме «${TOPICS[oddTopicKey].ru}». Найди лишнее!`,
+      exp: `${odd.code} «${odd.name.ru}» относится к теме «${TOPICS[oddTopicKey].ru}». Остальные три знака — к теме «${TOPICS[sameTopicKey].ru}».`
+    },
+    kz: {
+      q:   `Үш белгі «${TOPICS[sameTopicKey].kz}» тақырыбына жатады, біреуі — «${TOPICS[oddTopicKey].kz}» тақырыбына. Артығын тап!`,
+      exp: `${odd.code} «${odd.name.kz}» белгісі «${TOPICS[oddTopicKey].kz}» тақырыбына жатады. Қалған үш белгі «${TOPICS[sameTopicKey].kz}» тақырыбына кіреді.`
+    },
+    signs: [...sameCodes.map(sign), odd],
+    odd: oddCode
+  };
+}
+
+const ALL_ROUNDS = [
+  // rail vs traffic/pedestrians
+  makeRound(['1.1', '1.2', '1.3.1'],       '1.8',  'rail',        'traffic'),
+  makeRound(['1.1', '1.2', '1.3.1'],       '1.6',  'rail',        'traffic'),
+  makeRound(['1.1', '1.2', '1.3.1'],       '1.20', 'rail',        'pedestrians'),
+
+  // traffic vs другие
+  makeRound(['1.6', '1.7', '1.8'],         '1.19', 'traffic',     'geometry'),
+  makeRound(['1.6', '1.7', '1.19'],        '1.18', 'traffic',     'surface'),
+  makeRound(['1.7', '1.8', '1.19'],        '1.26', 'traffic',     'danger'),
+  makeRound(['1.6', '1.7', '1.8'],         '1.24', 'traffic',     'pedestrians'),
+  makeRound(['1.6', '1.8', '1.19'],        '1.23', 'traffic',     'danger'),
+
+  // geometry vs другие
+  makeRound(['1.11.1', '1.12.1', '1.13'], '1.15', 'geometry',    'surface'),
+  makeRound(['1.13',   '1.14',   '1.19'], '1.20', 'geometry',    'pedestrians'),
+  makeRound(['1.11.1', '1.12.1', '1.14'], '1.27', 'geometry',    'environment'),
+  makeRound(['1.11.1', '1.13',   '1.14'], '1.22', 'geometry',    'traffic'),
+  makeRound(['1.11.1', '1.12.1', '1.13'], '1.26', 'geometry',    'danger'),
+  makeRound(['1.13',   '1.14', '1.11.1'], '1.25', 'geometry',    'pedestrians'),
+
+  // surface vs другие
+  makeRound(['1.15', '1.16', '1.17'],      '1.14', 'surface',     'geometry'),
+  makeRound(['1.15', '1.16', '1.18'],      '1.8',  'surface',     'traffic'),
+  makeRound(['1.15', '1.16', '1.17'],      '1.24', 'surface',     'pedestrians'),
+  makeRound(['1.16', '1.17', '1.18'],      '1.27', 'surface',     'environment'),
+  makeRound(['1.15', '1.17', '1.18'],      '1.23', 'surface',     'danger'),
+
+  // pedestrians vs другие
+  makeRound(['1.20', '1.24', '1.25'],      '1.22', 'pedestrians', 'traffic'),
+  makeRound(['1.20', '1.24', '1.25'],      '1.23', 'pedestrians', 'danger'),
+  makeRound(['1.20', '1.22', '1.24'],      '1.27', 'pedestrians', 'environment'),
+  makeRound(['1.20', '1.22', '1.25'],      '1.13', 'pedestrians', 'geometry'),
+  makeRound(['1.20', '1.24', '1.25'],      '1.19', 'pedestrians', 'traffic'),
+
+  // environment/danger vs другие
+  makeRound(['1.26', '1.27', '1.30'],      '1.20', 'environment', 'pedestrians'),
+  makeRound(['1.26', '1.27', '1.18'],      '1.6',  'environment', 'traffic'),
+  makeRound(['1.23', '1.26', '1.30'],      '1.7',  'danger',      'traffic'),
+  makeRound(['1.23', '1.30', '1.18'],      '1.2',  'danger',      'rail'),
+  makeRound(['1.23', '1.26', '1.30'],      '1.15', 'danger',      'surface'),
+  makeRound(['1.27', '1.30', '1.18'],      '1.1',  'environment', 'rail'),
+];
+
+let lang = localStorage.getItem('pdd_lang') || 'ru';
+let selectedRoundCount = parseInt(localStorage.getItem('pdd_round_count') || String(DEFAULT_ROUND_COUNT), 10);
+if (!ROUND_COUNT_OPTIONS.includes(selectedRoundCount)) selectedRoundCount = DEFAULT_ROUND_COUNT;
+
+let activeRounds = [];
+let curRound = 0;
+let score = 0;
+let correct = 0;
+let answered = false;
+let timerInt = null;
+let timeLeft = ROUND_TIME;
+
+function totalRounds() { return activeRounds.length || selectedRoundCount; }
+
+function t(key, ...args) {
+  const val = T[lang][key];
+  return typeof val === 'function' ? val(...args) : val;
+}
+
+function shuffleArray(items) {
+  const arr = [...items];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function escapeSvg(value) {
+  return String(value)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function wrapPlaceholderText(text, max = 16) {
+  const words = String(text).split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = '';
+  words.forEach(word => {
+    const next = line ? `${line} ${word}` : word;
+    if (next.length > max && line) { lines.push(line); line = word; }
+    else line = next;
+  });
+  if (line) lines.push(line);
+  return lines.slice(0, 2);
+}
+
+function buildPlaceholderDataUri(code, name) {
+  const labelLines = wrapPlaceholderText(name);
+  const label = labelLines.map((line, i) =>
+    `<text x="256" y="${i ? 495 : 468}" text-anchor="middle" font-size="24" font-family="Mulish,Arial,sans-serif" font-weight="700" fill="#0f172a">${escapeSvg(line)}</text>`
+  ).join('');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+    <rect width="512" height="512" rx="36" fill="#f8fafc"/>
+    <polygon points="256,60 452,396 60,396" fill="#ffffff" stroke="#d62828" stroke-width="24"/>
+    <text x="256" y="238" text-anchor="middle" font-size="54" font-family="Unbounded,Arial,sans-serif" font-weight="700" fill="#0f172a">${escapeSvg(code)}</text>
+    <rect x="46" y="422" width="420" height="64" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="4"/>
+    ${label}
+  </svg>`;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function updateRoundCountUI() {
+  ROUND_COUNT_OPTIONS.forEach(count => {
+    document.getElementById(`count-${count}`).classList.toggle('active', count === selectedRoundCount);
+  });
+  document.getElementById('home-round-count').textContent = selectedRoundCount;
+}
+
+function selectRoundCount(count) {
+  if (!ROUND_COUNT_OPTIONS.includes(count)) return;
+  selectedRoundCount = count;
+  localStorage.setItem('pdd_round_count', String(count));
+  updateRoundCountUI();
+}
+
+function applyLang() {
+  const L = T[lang];
+  document.getElementById('logo-text').innerHTML         = L.logo;
+  document.getElementById('hero-tag-text').textContent   = L.heroTag;
+  document.getElementById('hero-title-text').innerHTML   = L.heroTitle;
+  document.getElementById('hero-sub-text').textContent   = L.heroSub;
+  document.getElementById('hs-rounds').textContent       = L.hsRounds;
+  document.getElementById('hs-secs').textContent         = L.hsSecs;
+  document.getElementById('hs-tries').textContent        = L.hsTries;
+  document.getElementById('lbl-round-count').textContent = L.roundCountLabel;
+  document.getElementById('btn-start').textContent       = L.btnStart;
+  document.getElementById('btn-lb').textContent          = L.btnLb;
+  document.getElementById('lbl-recent').textContent      = L.lblRecent;
+  document.getElementById('lbl-round-word').textContent  = L.lblRoundWord;
+  document.getElementById('lbl-pts-short').textContent   = L.lblPtsShort;
+  document.getElementById('btn-stop').textContent        = L.btnStop;
+  document.getElementById('hdr-score-label').textContent = L.scoreLabel;
+  document.getElementById('lbl-pts-res').textContent     = L.lblPtsRes;
+  document.getElementById('lbl-correct').textContent     = L.lblCorrect;
+  document.getElementById('lbl-wrong').textContent       = L.lblWrong;
+  document.getElementById('lbl-acc').textContent         = L.lblAcc;
+  document.getElementById('lbl-save').textContent        = L.lblSave;
+  document.getElementById('save-name').placeholder       = L.savePlaceholder;
+  document.getElementById('btn-save-rec').textContent    = L.btnSaveRec;
+  document.getElementById('save-ok').textContent         = L.saveOk;
+  document.getElementById('btn-play-again').textContent  = L.btnPlayAgain;
+  document.getElementById('btn-lb2').textContent         = L.btnLb;
+  document.getElementById('btn-home2').textContent       = L.btnHome;
+  document.getElementById('lbl-lb-title').textContent    = L.lbTitle;
+  document.getElementById('btn-clear').textContent       = L.btnClear;
+  document.getElementById('btn-home3').textContent       = L.btnHome;
+  document.getElementById('lang-ru-lbl').style.opacity   = lang === 'ru' ? '1' : '0.45';
+  document.getElementById('lang-kz-lbl').style.opacity   = lang === 'kz' ? '1' : '0.45';
+  const btnNext = document.getElementById('btn-next');
+  if (btnNext.classList.contains('show')) {
+    btnNext.textContent = curRound < totalRounds() - 1 ? t('btnNextRound') : t('btnResults');
+  }
+  updateRoundCountUI();
+  renderHomeRecs();
+}
+
+function toggleLang() {
+  lang = lang === 'ru' ? 'kz' : 'ru';
+  localStorage.setItem('pdd_lang', lang);
+  applyLang();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const inQuiz = id === 'screen-quiz';
+  document.getElementById('hdr-score').style.display = inQuiz ? 'block' : 'none';
+  document.getElementById('btn-stop').style.display  = inQuiz ? 'block' : 'none';
+  if (id === 'screen-home') renderHomeRecs();
+  if (id === 'screen-lb')   renderLB();
+}
+
+function startGame() {
+  activeRounds = shuffleArray(ALL_ROUNDS).slice(0, selectedRoundCount);
+  curRound = 0; score = 0; correct = 0;
+  document.getElementById('hdr-pts').textContent = '0';
+  showScreen('screen-quiz');
+  renderRound();
+}
+
+function stopEarly() {
+  const played = curRound + (answered ? 1 : 0);
+  if (!confirm(t('confirmStop', played, totalRounds()))) return;
+  clearInterval(timerInt);
+  showResults(true, played);
+}
+
+function renderRound() {
+  answered = false;
+  const round = activeRounds[curRound];
+  const roundSigns = shuffleArray(round.signs);
+  document.getElementById('q-num').textContent  = curRound + 1;
+  document.getElementById('q-tot').textContent  = totalRounds();
+  document.getElementById('q-text').textContent = round[lang].q;
+  document.getElementById('q-score').textContent  = score;
+  document.getElementById('hdr-pts').textContent  = score;
+  document.getElementById('q-prog').style.width   = `${(curRound / totalRounds()) * 100}%`;
+  document.getElementById('feedback').className   = 'feedback';
+  const btn = document.getElementById('btn-next');
+  btn.className   = 'btn-next';
+  btn.textContent = curRound < totalRounds() - 1 ? t('btnNextRound') : t('btnResults');
+
+  const grid = document.getElementById('signs-grid');
+  grid.innerHTML = '';
+  roundSigns.forEach(signItem => {
+    const card = document.createElement('div');
+    card.className        = 'sign-card';
+    card.dataset.code     = signItem.code;
+    const label           = signItem.name[lang];
+    card.innerHTML = `
+      <img class="sign-img" src="signs/${signItem.img}" alt="${label}">
+      <div class="sign-code">${signItem.code}</div>
+      <div class="sign-name">${label}</div>`;
+    card.querySelector('.sign-img').onerror = (e) => {
+      e.target.onerror = null;
+      e.target.src = buildPlaceholderDataUri(signItem.code, label);
+    };
+    card.onclick = () => pick(signItem.code);
+    grid.appendChild(card);
+  });
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(timerInt);
+  timeLeft = ROUND_TIME;
+  const circ = document.getElementById('t-circle');
+  const num  = document.getElementById('t-num');
+  const C    = 207;
+  const tick = () => {
+    num.textContent = timeLeft;
+    circ.style.strokeDashoffset = C * (1 - timeLeft / ROUND_TIME);
+    const danger = timeLeft <= 5;
+    circ.style.stroke = danger ? '#e53935' : '#00AEEF';
+    num.style.color   = danger ? '#e53935' : '';
+  };
+  tick();
+  timerInt = setInterval(() => {
+    timeLeft -= 1; tick();
+    if (timeLeft <= 0) { clearInterval(timerInt); if (!answered) doTimeout(); }
+  }, 1000);
+}
+
+function pick(code) {
+  if (answered) return;
+  clearInterval(timerInt);
+  answered = true;
+  const round = activeRounds[curRound];
+  const cards = document.querySelectorAll('.sign-card');
+  cards.forEach(card => card.classList.add('disabled'));
+  const fb = document.getElementById('feedback');
+  if (code === round.odd) {
+    correct += 1;
+    score   += 100 + Math.max(0, timeLeft * 10);
+    cards.forEach(card => card.classList.add(card.dataset.code === round.odd ? 'sel-ok' : 'rev-dim'));
+    fb.className   = 'feedback ok show';
+    fb.textContent = t('fbOk', round[lang].exp);
+  } else {
+    cards.forEach(card => {
+      if      (card.dataset.code === code)      card.classList.add('sel-err');
+      else if (card.dataset.code === round.odd) card.classList.add('rev-ok');
+      else                                      card.classList.add('rev-dim');
+    });
+    fb.className   = 'feedback err show';
+    fb.textContent = t('fbErr', round[lang].exp);
+  }
+  document.getElementById('q-score').textContent  = score;
+  document.getElementById('hdr-pts').textContent  = score;
+  const btn = document.getElementById('btn-next');
+  btn.className   = 'btn-next show';
+  btn.textContent = curRound < totalRounds() - 1 ? t('btnNextRound') : t('btnResults');
+}
+
+function doTimeout() {
+  if (answered) return;
+  answered = true;
+  const round = activeRounds[curRound];
+  const cards = document.querySelectorAll('.sign-card');
+  cards.forEach(card => {
+    card.classList.add('disabled');
+    card.classList.add(card.dataset.code === round.odd ? 'rev-ok' : 'rev-dim');
+  });
+  const fb = document.getElementById('feedback');
+  fb.className   = 'feedback tim show';
+  fb.textContent = t('fbTim', round[lang].exp);
+  const btn = document.getElementById('btn-next');
+  btn.className   = 'btn-next show';
+  btn.textContent = curRound < totalRounds() - 1 ? t('btnNextRound') : t('btnResults');
+}
+
+function nextRound() {
+  curRound += 1;
+  if (curRound >= totalRounds()) showResults(false, totalRounds());
+  else renderRound();
+}
+
+function showResults(early, played) {
+  clearInterval(timerInt);
+  const total = totalRounds();
+  if (played === undefined) played = curRound + (answered ? 1 : 0);
+  const pct = played > 0 ? Math.round((correct / played) * 100) : 0;
+  let verdict, hint;
+  if (early)        { verdict = t('verdictEarly'); hint = t('hintEarly', played, total); }
+  else if (pct === 100) { verdict = t('verdict100'); hint = t('hint100'); }
+  else if (pct >= 70)   { verdict = t('verdict70');  hint = t('hint70'); }
+  else                  { verdict = t('verdictLow'); hint = t('hintLow'); }
+  document.getElementById('res-verdict').textContent = verdict;
+  document.getElementById('res-hint').textContent    = hint;
+  document.getElementById('res-pts').textContent     = score;
+  document.getElementById('res-correct').textContent = correct;
+  document.getElementById('res-wrong').textContent   = played - correct;
+  document.getElementById('res-pct').textContent     = `${pct}%`;
+  document.getElementById('save-name').value         = localStorage.getItem('pdd_last_name') || '';
+  document.getElementById('save-ok').className       = 'save-ok';
+  document.getElementById('save-ok').textContent     = t('saveOk');
+  const playedCount = parseInt(localStorage.getItem('pdd_played') || '0', 10) + 1;
+  localStorage.setItem('pdd_played', String(playedCount));
+  document.getElementById('home-played').textContent = String(playedCount);
+  window._lastPlayed = played;
+  window._lastTotal  = total;
+  showScreen('screen-results');
+}
+
+function getRecs() {
+  try { return JSON.parse(localStorage.getItem('pdd_recs') || '[]'); }
+  catch { return []; }
+}
+
+function esc(value) {
+  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function saveRecord() {
+  const name = document.getElementById('save-name').value.trim();
+  if (!name) return;
+  localStorage.setItem('pdd_last_name', name);
+  const played = window._lastPlayed || 0;
+  const total  = window._lastTotal  || selectedRoundCount;
+  const pct    = played > 0 ? Math.round((correct / played) * 100) : 0;
+  const recs   = getRecs();
+  const locale = lang === 'kz' ? 'kk-KZ' : 'ru-RU';
+  recs.push({ name, score, correct, played, total, pct,
+    date: new Date().toLocaleDateString(locale, { day: '2-digit', month: 'short' }) });
+  recs.sort((a, b) => b.score - a.score);
+  localStorage.setItem('pdd_recs', JSON.stringify(recs.slice(0, 20)));
+  document.getElementById('save-ok').className = 'save-ok show';
+}
+
+function clearRecs() {
+  if (!confirm(t('confirmClear'))) return;
+  localStorage.removeItem('pdd_recs');
+  renderLB();
+}
+
+function renderLB() {
+  const recs = getRecs();
+  const cols = t('lbCols');
+  const el   = document.getElementById('lb-body');
+  if (!recs.length) { el.innerHTML = `<div class="empty-lb">${t('lbEmpty')}</div>`; return; }
+  const rc = ['r1', 'r2', 'r3'];
+  el.innerHTML = `<table class="lb">
+    <thead><tr>${cols.map(col => `<th>${col}</th>`).join('')}</tr></thead>
+    <tbody>${recs.slice(0, 15).map((rec, i) => `<tr>
+      <td><span class="rk ${rc[i] || ''}">${i + 1}</span></td>
+      <td>${esc(rec.name)}</td>
+      <td><strong>${rec.score}</strong></td>
+      <td>${rec.correct} / ${rec.played}</td>
+      <td><div class="pct-row"><div class="pct-bar" style="width:${Math.round((rec.pct || 0) * 0.8)}px"></div><span class="pct-num">${rec.pct}%</span></div></td>
+      <td>${rec.date}</td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function renderHomeRecs() {
+  document.getElementById('home-played').textContent      = localStorage.getItem('pdd_played') || '0';
+  document.getElementById('home-round-count').textContent = String(selectedRoundCount);
+  const recs = getRecs();
+  const el   = document.getElementById('home-recs');
+  if (!recs.length) { el.innerHTML = `<div class="no-recs">${t('noRecs')}</div>`; return; }
+  el.innerHTML = recs.slice(0, 3).map((rec, i) => `
+    <div class="rec-mini">
+      <span class="rec-mini-rank ${i === 0 ? 'g' : ''}">${i + 1}</span>
+      <span class="rec-mini-name">${esc(rec.name)}</span>
+      <span class="rec-mini-score">${rec.score}</span>
+      <span class="rec-mini-date">${rec.date}</span>
+    </div>`).join('');
+}
+
+applyLang();
+</script>
+</body>
+</html>
